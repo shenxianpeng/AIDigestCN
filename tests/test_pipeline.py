@@ -12,6 +12,14 @@ pytest 测试 — pipeline.py 核心函数
   test_parse_llm_output_partial       — 只有 SUMMARY 时正常处理
   test_render_html_with_entries       — 有内容时渲染正确 HTML
   test_render_html_empty              — 无内容时渲染空状态 HTML
+  test_fetch_tweets_happy_path        — 正常返回推文列表
+  test_fetch_tweets_user_not_found    — 用户不存在时返回 []
+  test_fetch_tweets_no_tweets         — 无推文时返回 []
+  test_fetch_tweets_exception         — 任何异常返回 []（不抛出）
+  test_translate_success              — 正常翻译返回 title/summary/original
+  test_translate_api_failure          — API 异常时返回 fallback dict
+  test_main_missing_twitter_token     — 缺少 TWITTER_BEARER_TOKEN 时抛出 ValueError
+  test_main_missing_anthropic_key     — 缺少 ANTHROPIC_API_KEY 时抛出 ValueError
 """
 
 import json
@@ -28,11 +36,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from pipeline import (
     TweetEntry,
+    fetch_tweets,
     load_config,
     load_processed_ids,
+    main,
     parse_llm_output,
     render_html,
     save_processed_ids,
+    translate,
 )
 
 
@@ -213,3 +224,119 @@ def test_render_html_empty():
 
     assert "今日无新内容" in html
     assert "Sam Altman" not in html
+
+
+# ---------------------------------------------------------------------------
+# fetch_tweets
+# ---------------------------------------------------------------------------
+
+def _make_tweet(id_="111", text="hello", created_at=None):
+    """构造 mock 推文对象。"""
+    from datetime import datetime
+    t = MagicMock()
+    t.id = id_
+    t.text = text
+    t.created_at = created_at or datetime(2026, 3, 22, 9, 0)
+    return t
+
+
+def test_fetch_tweets_happy_path():
+    """正常情况：返回格式化的推文字典列表。"""
+    mock_client = MagicMock()
+    mock_client.get_user.return_value.data.id = "123"
+    tweet = _make_tweet("111", "AGI is near")
+    mock_client.get_users_tweets.return_value.data = [tweet]
+
+    result = fetch_tweets("sama", mock_client)
+
+    assert len(result) == 1
+    assert result[0]["id"] == "111"
+    assert result[0]["text"] == "AGI is near"
+    assert "sama/status/111" in result[0]["url"]
+
+
+def test_fetch_tweets_user_not_found():
+    """用户不存在（data=None）时返回空列表，不抛出异常。"""
+    mock_client = MagicMock()
+    mock_client.get_user.return_value.data = None
+
+    result = fetch_tweets("nonexistent_user", mock_client)
+
+    assert result == []
+
+
+def test_fetch_tweets_no_tweets():
+    """用户存在但无推文（tweets_resp.data=None）时返回空列表。"""
+    mock_client = MagicMock()
+    mock_client.get_user.return_value.data.id = "123"
+    mock_client.get_users_tweets.return_value.data = None
+
+    result = fetch_tweets("sama", mock_client)
+
+    assert result == []
+
+
+def test_fetch_tweets_exception():
+    """任何 API 异常都返回空列表，不向上抛出。"""
+    mock_client = MagicMock()
+    mock_client.get_user.side_effect = Exception("network error")
+
+    result = fetch_tweets("sama", mock_client)
+
+    assert result == []
+
+
+# ---------------------------------------------------------------------------
+# translate
+# ---------------------------------------------------------------------------
+
+def test_translate_success():
+    """正常翻译：返回含 title、summary、original 的字典。"""
+    mock_client = MagicMock()
+    mock_content = MagicMock()
+    mock_content.text = "TITLE: AGI 近了\nSUMMARY: Altman 认为 AGI 比预期更近。"
+    mock_client.messages.create.return_value.content = [mock_content]
+
+    tweet = {"id": "1", "text": "AGI is coming sooner than expected.", "created_at": "2026-03-22 09:00"}
+    result = translate(tweet, mock_client)
+
+    assert result["title"] == "AGI 近了"
+    assert result["summary"] == "Altman 认为 AGI 比预期更近。"
+    assert result["original"] == tweet["text"]
+
+
+def test_translate_api_failure():
+    """API 异常时返回 fallback dict，不向上抛出。"""
+    mock_client = MagicMock()
+    mock_client.messages.create.side_effect = Exception("api timeout")
+
+    tweet = {"id": "1", "text": "The original tweet text.", "created_at": "2026-03-22 09:00"}
+    result = translate(tweet, mock_client)
+
+    assert result["title"] == "（翻译失败）"
+    assert result["summary"] == tweet["text"]
+    assert result["original"] == tweet["text"]
+
+
+# ---------------------------------------------------------------------------
+# main — 环境变量缺失检查
+# ---------------------------------------------------------------------------
+
+def test_main_missing_twitter_token():
+    """缺少 TWITTER_BEARER_TOKEN 时抛出 ValueError。"""
+    with patch.dict("os.environ", {"TWITTER_BEARER_TOKEN": "", "ANTHROPIC_API_KEY": "sk-test"}, clear=False):
+        # 确保 key 不存在
+        import os
+        env = {"ANTHROPIC_API_KEY": "sk-test"}
+        with patch.dict(os.environ, env, clear=True):
+            with pytest.raises(ValueError, match="TWITTER_BEARER_TOKEN"):
+                main()
+
+
+def test_main_missing_anthropic_key():
+    """缺少 ANTHROPIC_API_KEY 时抛出 ValueError。"""
+    import os
+    env = {"TWITTER_BEARER_TOKEN": "tok-test"}
+    with patch.dict(os.environ, env, clear=True):
+        with pytest.raises(ValueError, match="ANTHROPIC_API_KEY"):
+            main()

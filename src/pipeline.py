@@ -21,10 +21,9 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
 import json
 import logging
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Optional
 
 import anthropic
 import tweepy
