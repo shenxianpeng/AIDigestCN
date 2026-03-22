@@ -6,7 +6,7 @@ on:
   workflow_dispatch:        # 允许手动触发（用于测试）
 
 permissions:
-  contents: write           # 允许提交 docs/ 和 processed_ids.json
+  contents: write           # push 到 main 和 gh-pages 均需要
 
 jobs:
   update:
@@ -38,11 +38,37 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python src/pipeline.py
 
-      - name: Commit and push updates
+      - name: Commit processed_ids to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/ processed_ids.json
-          git diff --staged --quiet && echo "No changes to commit" || \
-            git commit -m "chore: daily update $(date +%Y-%m-%d)"
-          git push
+          git add processed_ids.json
+          git diff --staged --quiet && echo "No new tweets" || \
+            { git commit -m "chore: update processed_ids $(date +%Y-%m-%d)" && git push origin main; }
+
+      - name: Deploy site to gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          # Switch to gh-pages (create as orphan on first deploy)
+          if git ls-remote --exit-code --heads origin gh-pages > /dev/null 2>&1; then
+            git checkout gh-pages
+            git pull origin gh-pages --ff-only
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . --quiet 2>/dev/null || true
+          fi
+
+          # docs/ is untracked in main and persists through git checkout —
+          # copy the generated files into the gh-pages working tree
+          touch .nojekyll
+          cp docs/index.html ./index.html
+          mkdir -p archive
+          [ -d docs/archive ] && cp -r docs/archive/. archive/ || true
+
+          git add .nojekyll index.html archive/
+          git diff --staged --quiet && echo "Nothing new to deploy" || \
+            git commit -m "deploy: $(date +%Y-%m-%d)"
+          git push origin gh-pages

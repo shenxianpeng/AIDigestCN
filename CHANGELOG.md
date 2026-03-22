@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0.0] - 2026-03-22
+
+### Added
+- README with GitHub Pages link, Fork setup guide, and local run instructions
+- `gh-pages` branch deployment: static site now lives on a dedicated orphan branch, keeping `main` clean
+- `.nojekyll` in `gh-pages` to prevent Jekyll processing
+
+### Changed
+- GitHub Actions workflow split into two steps: commit `processed_ids.json` to `main`, deploy HTML to `gh-pages`
+- Redesigned page template: modern card layout with subtle shadows, hover effects, clean typography, and CSS custom properties
+- Footer simplified to a single "历史存档" archive link
+- `docs/` added to `.gitignore` — generated files are build artifacts, not source
+
+### Removed
+- `docs/.gitkeep`, `docs/index.html`, `docs/archive/` from `main` branch tracking
+
 ## [0.1.0.0] - 2026-03-22
 
 ### Added
