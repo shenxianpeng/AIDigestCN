@@ -11,3 +11,4 @@ build/
 htmlcov/
 *.log
 .DS_Store
+docs/
