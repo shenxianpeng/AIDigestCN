@@ -2,7 +2,7 @@
 
 每日自动抓取顶级 AI 领袖的推文，翻译成中文，发布到 GitHub Pages。
 
-**[→ 查看最新内容](https://shenxianpeng.github.io/new-prod-01/)**
+**[→ 查看最新内容](https://shenxianpeng.github.io/AIDigestCN/)**
 
 当前关注：Sam Altman · Dario Amodei · Andrej Karpathy
 
