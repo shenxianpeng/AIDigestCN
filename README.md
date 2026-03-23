@@ -4,7 +4,7 @@
 
 **[→ 查看最新内容](https://shenxianpeng.github.io/AIDigestCN/)**
 
-当前关注：Sam Altman · Dario Amodei · Andrej Karpathy
+当前关注：Sam Altman · Dario Amodei · Andrej Karpathy · Swyx · Josh Woodward · Kevin Weil · Peter Yang · Nan Yu · Madhu Guru · Amanda Askell · Cat Wu · Thariq · Google Labs · Amjad Masad · Guillermo Rauch · Alex Albert · Aaron Levie · Ryo Lu · Garry Tan · Matt Turck · Zara Zhang · Nikunj Kothari · Peter Steinberger · Dan Shipper · Aditya Agarwal · Claude
 
 ---
 
