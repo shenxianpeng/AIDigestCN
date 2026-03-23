@@ -21,11 +21,13 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
 import json
 import logging
 import os
-from dataclasses import dataclass
-from datetime import date
+import re
+from dataclasses import dataclass, field
+from datetime import date, datetime
 from pathlib import Path
 
 import anthropic
+import feedparser
 import tweepy
 import yaml
 from jinja2 import Environment, FileSystemLoader
@@ -39,6 +41,9 @@ PROCESSED_IDS_FILE = ROOT / "processed_ids.json"
 DOCS_DIR = ROOT / "docs"
 ARCHIVE_DIR = DOCS_DIR / "archive"
 TEMPLATES_DIR = ROOT / "templates"
+
+# RSS 条目正文截断长度：限制传给 LLM 的文本大小，避免超出 token 预算
+MAX_RSS_TEXT_LENGTH = 1000
 
 # LLM prompt — 固定模板，稳定输出格式
 PROMPT_TEMPLATE = """\
@@ -62,6 +67,8 @@ class Person:
     name: str
     twitter_handle: str
     twitter_enabled: bool
+    rss_url: str = field(default="")
+    rss_enabled: bool = field(default=False)
 
 
 @dataclass
@@ -87,15 +94,24 @@ def load_config(path: Path = PEOPLE_FILE) -> list[Person]:
 
     people = []
     for item in data.get("people", []):
+        sources = item.get("sources", [])
         twitter_enabled = any(
             s.get("type") == "twitter" and s.get("enabled", False)
-            for s in item.get("sources", [])
+            for s in sources
         )
+        rss_source = next(
+            (s for s in sources if s.get("type") == "rss"),
+            None,
+        )
+        rss_enabled = bool(rss_source and rss_source.get("enabled", False))
+        rss_url = rss_source.get("url", "") if rss_source else ""
         people.append(Person(
             id=item["id"],
             name=item["name"],
             twitter_handle=item["twitter_handle"],
             twitter_enabled=twitter_enabled,
+            rss_url=rss_url,
+            rss_enabled=rss_enabled,
         ))
     return people
 
@@ -161,6 +177,53 @@ def fetch_tweets(handle: str, client: tweepy.Client) -> list[dict]:
         ]
     except Exception as e:
         logger.warning(f"@{handle} 抓取失败（已跳过）：{e}")
+        return []
+
+
+# ---------------------------------------------------------------------------
+# RSS 抓取
+# ---------------------------------------------------------------------------
+
+def fetch_rss(url: str) -> list[dict]:
+    """
+    抓取 RSS/Atom feed 中的最近条目（最多 10 条）。
+    任何错误都返回空列表，不抛出异常。
+
+    返回格式：[{"id": str, "text": str, "created_at": str, "url": str}]
+    """
+    try:
+        feed = feedparser.parse(url)
+        result = []
+        for entry in feed.entries[:10]:
+            # 提取正文：优先 content，其次 summary
+            raw_text = ""
+            if entry.get("content"):
+                raw_text = entry.content[0].get("value", "")
+            elif entry.get("summary"):
+                raw_text = entry.summary
+            # 去除 HTML 标签
+            text = re.sub(r"<[^>]+>", "", raw_text).strip()
+            if not text:
+                continue
+
+            entry_id = entry.get("id") or entry.get("link", "")
+            if not entry_id:
+                continue
+
+            published = ""
+            parsed_time = entry.get("published_parsed")
+            if parsed_time and len(parsed_time) >= 6:
+                published = datetime(*parsed_time[:6]).strftime("%Y-%m-%d %H:%M")
+
+            result.append({
+                "id": entry_id,
+                "text": text[:MAX_RSS_TEXT_LENGTH],
+                "created_at": published,
+                "url": entry.get("link", url),
+            })
+        return result
+    except Exception as e:
+        logger.warning(f"RSS 抓取失败（{url}）：{e}")
         return []
 
 
@@ -262,30 +325,51 @@ def main() -> None:
     new_ids: set[str] = set()
 
     for person in people:
-        if not person.twitter_enabled:
-            continue
+        if person.twitter_enabled:
+            logger.info(f"抓取 @{person.twitter_handle} 的推文…")
+            tweets = fetch_tweets(person.twitter_handle, twitter_client)
 
-        logger.info(f"抓取 @{person.twitter_handle} 的推文…")
-        tweets = fetch_tweets(person.twitter_handle, twitter_client)
+            for tweet in tweets:
+                if tweet["id"] in processed_ids:
+                    continue
 
-        for tweet in tweets:
-            if tweet["id"] in processed_ids:
-                continue
+                logger.info(f"  翻译推文 {tweet['id']}")
+                translated = translate(tweet, anthropic_client)
 
-            logger.info(f"  翻译推文 {tweet['id']}")
-            translated = translate(tweet, anthropic_client)
+                entries.append(TweetEntry(
+                    tweet_id=tweet["id"],
+                    person_id=person.id,
+                    person_name=person.name,
+                    original_text=tweet["text"],
+                    tweet_url=tweet["url"],
+                    created_at=tweet["created_at"],
+                    title=translated["title"],
+                    summary=translated["summary"],
+                ))
+                new_ids.add(tweet["id"])
 
-            entries.append(TweetEntry(
-                tweet_id=tweet["id"],
-                person_id=person.id,
-                person_name=person.name,
-                original_text=tweet["text"],
-                tweet_url=tweet["url"],
-                created_at=tweet["created_at"],
-                title=translated["title"],
-                summary=translated["summary"],
-            ))
-            new_ids.add(tweet["id"])
+        if person.rss_enabled and person.rss_url:
+            logger.info(f"抓取 {person.name} 的 RSS…")
+            rss_items = fetch_rss(person.rss_url)
+
+            for item in rss_items:
+                if item["id"] in processed_ids:
+                    continue
+
+                logger.info(f"  翻译 RSS 条目 {item['id'][:60]}")
+                translated = translate(item, anthropic_client)
+
+                entries.append(TweetEntry(
+                    tweet_id=item["id"],
+                    person_id=person.id,
+                    person_name=person.name,
+                    original_text=item["text"],
+                    tweet_url=item["url"],
+                    created_at=item["created_at"],
+                    title=translated["title"],
+                    summary=translated["summary"],
+                ))
+                new_ids.add(item["id"])
 
     # 写出 HTML
     DOCS_DIR.mkdir(exist_ok=True)

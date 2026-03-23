@@ -5,6 +5,9 @@ people:
     sources:
       - type: twitter
         enabled: true
+      - type: rss
+        url: https://blog.samaltman.com/rss
+        enabled: true
       - type: podcast    # V2
         enabled: false
 
@@ -20,6 +23,9 @@ people:
     twitter_handle: karpathy
     sources:
       - type: twitter
+        enabled: true
+      - type: rss
+        url: https://karpathy.github.io/feed.xml
         enabled: true
 
   - id: swyx

@@ -4,6 +4,8 @@ pytest 测试 — pipeline.py 核心函数
 测试覆盖（见测试计划）：
   test_load_config_valid              — 正常解析 people.yml
   test_load_config_twitter_disabled   — enabled:false 时 twitter_enabled=False
+  test_load_config_rss_source         — 解析 RSS source（url/enabled）
+  test_load_config_rss_disabled       — rss enabled:false 时 rss_enabled=False
   test_load_processed_ids_new         — 文件不存在时返回空集合
   test_load_processed_ids_existing    — 加载已有 ID 列表
   test_load_processed_ids_malformed   — 格式损坏时返回空集合（不崩溃）
@@ -16,6 +18,10 @@ pytest 测试 — pipeline.py 核心函数
   test_fetch_tweets_user_not_found    — 用户不存在时返回 []
   test_fetch_tweets_no_tweets         — 无推文时返回 []
   test_fetch_tweets_exception         — 任何异常返回 []（不抛出）
+  test_fetch_rss_happy_path           — 正常返回 RSS 条目列表
+  test_fetch_rss_no_entries           — feed 无条目时返回 []
+  test_fetch_rss_html_stripped        — 正文 HTML 标签被去除
+  test_fetch_rss_exception            — 任何异常返回 []（不抛出）
   test_translate_success              — 正常翻译返回 title/summary/original
   test_translate_api_failure          — API 异常时返回 fallback dict
   test_main_missing_twitter_token     — 缺少 TWITTER_BEARER_TOKEN 时抛出 ValueError
@@ -36,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from pipeline import (
     TweetEntry,
+    fetch_rss,
     fetch_tweets,
     load_config,
     load_processed_ids,
@@ -100,6 +107,50 @@ def test_load_config_empty_people(tmp_path):
     p.write_text(yaml.dump({"people": []}), encoding="utf-8")
 
     assert load_config(p) == []
+
+
+def test_load_config_rss_source(tmp_path):
+    """rss source 的 url 和 enabled 被正确解析。"""
+    config = {
+        "people": [
+            {
+                "id": "sam_altman",
+                "name": "Sam Altman",
+                "twitter_handle": "sama",
+                "sources": [
+                    {"type": "twitter", "enabled": False},
+                    {"type": "rss", "url": "https://blog.samaltman.com/rss", "enabled": True},
+                ],
+            }
+        ]
+    }
+    p = tmp_path / "people.yml"
+    p.write_text(yaml.dump(config), encoding="utf-8")
+
+    people = load_config(p)
+    assert people[0].rss_enabled is True
+    assert people[0].rss_url == "https://blog.samaltman.com/rss"
+    assert people[0].twitter_enabled is False
+
+
+def test_load_config_rss_disabled(tmp_path):
+    """rss enabled:false 时 rss_enabled 应为 False，rss_url 为空字符串。"""
+    config = {
+        "people": [
+            {
+                "id": "test_person",
+                "name": "Test",
+                "twitter_handle": "test",
+                "sources": [{"type": "twitter", "enabled": True}],
+            }
+        ]
+    }
+    p = tmp_path / "people.yml"
+    p.write_text(yaml.dump(config), encoding="utf-8")
+
+    people = load_config(p)
+    assert people[0].rss_enabled is False
+    assert people[0].rss_url == ""
 
 
 # ---------------------------------------------------------------------------
@@ -282,6 +333,94 @@ def test_fetch_tweets_exception():
     mock_client.get_user.side_effect = Exception("network error")
 
     result = fetch_tweets("sama", mock_client)
+
+    assert result == []
+
+
+# ---------------------------------------------------------------------------
+# fetch_rss
+# ---------------------------------------------------------------------------
+
+def _make_feed(entries):
+    """构造 feedparser.FeedParserDict 风格的 mock feed。"""
+    feed = MagicMock()
+    feed.entries = entries
+    return feed
+
+
+def _make_rss_entry(
+    id_="https://example.com/post/1",
+    summary="Hello world content",
+    link="https://example.com/post/1",
+    published_parsed=(2026, 3, 22, 9, 0, 0, 0, 0, 0),
+    content=None,
+):
+    entry = MagicMock()
+    entry.get = lambda key, default=None: {
+        "id": id_,
+        "link": link,
+        "summary": summary,
+        "published_parsed": published_parsed,
+        "content": content,
+    }.get(key, default)
+    entry.id = id_
+    entry.summary = summary
+    entry.link = link
+    entry.published_parsed = published_parsed
+    entry.content = content or []
+    return entry
+
+
+def test_fetch_rss_happy_path():
+    """正常情况：返回格式化的 RSS 条目列表。"""
+    entry = _make_rss_entry(
+        id_="https://blog.example.com/post/1",
+        summary="AI is transforming the world.",
+        link="https://blog.example.com/post/1",
+    )
+    mock_feed = _make_feed([entry])
+
+    with patch("pipeline.feedparser.parse", return_value=mock_feed):
+        result = fetch_rss("https://blog.example.com/rss")
+
+    assert len(result) == 1
+    assert result[0]["id"] == "https://blog.example.com/post/1"
+    assert result[0]["text"] == "AI is transforming the world."
+    assert result[0]["url"] == "https://blog.example.com/post/1"
+    assert result[0]["created_at"] == "2026-03-22 09:00"
+
+
+def test_fetch_rss_no_entries():
+    """feed 无条目时返回空列表。"""
+    mock_feed = _make_feed([])
+
+    with patch("pipeline.feedparser.parse", return_value=mock_feed):
+        result = fetch_rss("https://blog.example.com/rss")
+
+    assert result == []
+
+
+def test_fetch_rss_html_stripped():
+    """正文中的 HTML 标签应被去除。"""
+    entry = _make_rss_entry(
+        id_="https://example.com/1",
+        summary="<p>This is <strong>important</strong> news.</p>",
+        link="https://example.com/1",
+    )
+    mock_feed = _make_feed([entry])
+
+    with patch("pipeline.feedparser.parse", return_value=mock_feed):
+        result = fetch_rss("https://example.com/rss")
+
+    assert "<p>" not in result[0]["text"]
+    assert "<strong>" not in result[0]["text"]
+    assert "This is important news." in result[0]["text"]
+
+
+def test_fetch_rss_exception():
+    """任何异常都返回空列表，不向上抛出。"""
+    with patch("pipeline.feedparser.parse", side_effect=Exception("connection error")):
+        result = fetch_rss("https://blog.example.com/rss")
 
     assert result == []
 
