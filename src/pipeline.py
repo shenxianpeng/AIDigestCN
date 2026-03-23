@@ -21,6 +21,8 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
 import json
 import logging
 import os
+import re
+import time
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -57,6 +59,10 @@ TEMPLATES_DIR = ROOT / "templates"
 # This keeps each daily run focused on recent content and prevents the
 # ever-growing processed_ids.json from masking genuinely new tweets.
 LOOKBACK_DAYS = 7
+
+# Gemini 免费 tier 限制：每分钟 5 次请求，间隔至少 12 秒
+_GEMINI_MIN_INTERVAL = 12.0  # seconds
+_last_gemini_request: float = 0.0
 
 # LLM prompt — 固定模板，稳定输出格式
 PROMPT_TEMPLATE = """\
@@ -250,28 +256,58 @@ def parse_llm_output(text: str, original: str) -> dict[str, str]:
     }
 
 
+def _extract_retry_delay(error_str: str) -> float:
+    """从 429 错误信息中解析建议的重试等待秒数，解析失败时默认 60 秒。"""
+    match = re.search(r"retryDelay['\"]:\s*['\"](\d+)s", error_str)
+    if match:
+        return float(match.group(1)) + 2.0  # 额外留 2 秒缓冲
+    return 60.0
+
+
 def translate(tweet: dict, client: genai.Client) -> dict[str, str]:
     """
     用 Gemini Flash 翻译一条推文。
-    API 失败时返回原文 fallback（不抛出异常）。
+    - 每次请求前强制间隔 _GEMINI_MIN_INTERVAL 秒，避免超出免费 tier 速率限制。
+    - 遇到 429 时读取 retryDelay 并自动重试，最多 3 次。
+    - API 最终失败时返回原文 fallback（不抛出异常）。
 
     返回格式：{"title": str, "summary": str, "original": str}
     """
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=PROMPT_TEMPLATE.format(tweet_text=tweet["text"]),
-        )
-        raw = response.text
-        parsed = parse_llm_output(raw, tweet["text"])
-        return {**parsed, "original": tweet["text"]}
-    except Exception as e:
-        logger.warning(f"LLM 翻译失败（使用原文 fallback）：{e}")
-        return {
-            "title": "（翻译失败）",
-            "summary": tweet["text"],
-            "original": tweet["text"],
-        }
+    global _last_gemini_request
+
+    fallback = {
+        "title": "（翻译失败）",
+        "summary": tweet["text"],
+        "original": tweet["text"],
+    }
+
+    for attempt in range(3):
+        # 速率限制：距上次请求不足间隔时主动等待
+        elapsed = time.time() - _last_gemini_request
+        if elapsed < _GEMINI_MIN_INTERVAL:
+            time.sleep(_GEMINI_MIN_INTERVAL - elapsed)
+
+        try:
+            _last_gemini_request = time.time()
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=PROMPT_TEMPLATE.format(tweet_text=tweet["text"]),
+            )
+            raw = response.text
+            parsed = parse_llm_output(raw, tweet["text"])
+            return {**parsed, "original": tweet["text"]}
+        except Exception as e:
+            error_str = str(e)
+            if "429" in error_str and attempt < 2:
+                delay = _extract_retry_delay(error_str)
+                logger.warning(f"  触发速率限制，等待 {delay:.0f}s 后重试（第 {attempt + 1} 次）…")
+                time.sleep(delay)
+                _last_gemini_request = 0.0  # 重置，让重试后立即发出请求
+            else:
+                logger.warning(f"LLM 翻译失败（使用原文 fallback）：{e}")
+                return fallback
+
+    return fallback
 
 
 # ---------------------------------------------------------------------------
