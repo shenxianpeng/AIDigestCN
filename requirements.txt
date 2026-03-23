@@ -1,4 +1,4 @@
-tweepy>=4.14.0
+tweeterpy>=2.0.15
 anthropic>=0.34.0
 Jinja2>=3.1.0
 PyYAML>=6.0

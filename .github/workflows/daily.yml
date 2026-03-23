@@ -34,7 +34,6 @@ jobs:
 
       - name: Run pipeline
         env:
-          TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python src/pipeline.py
 

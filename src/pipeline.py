@@ -5,7 +5,7 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
   people.yml
       │
       ▼
-  fetch_tweets()      ← Twitter API Free Tier (tweepy)
+  fetch_tweets()      ← TweeterPy (无需 Bearer Token，使用 Guest Session)
       │ new tweets only (去重: processed_ids.json)
       ▼
   translate()         ← Claude Haiku (TITLE: / SUMMARY: 格式)
@@ -22,13 +22,14 @@ import json
 import logging
 import os
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import anthropic
-import tweepy
 import yaml
 from jinja2 import Environment, FileSystemLoader
+from tweeterpy import TweeterPy
+from tweeterpy.util import Tweet
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
@@ -126,7 +127,16 @@ def save_processed_ids(ids: set[str], path: Path = PROCESSED_IDS_FILE) -> None:
 # 抓取
 # ---------------------------------------------------------------------------
 
-def fetch_tweets(handle: str, client: tweepy.Client) -> list[dict]:
+def _parse_twitter_date(date_str: str) -> str:
+    """将 Twitter 时间格式（'Mon Mar 22 09:00:00 +0000 2026'）转换为 'YYYY-MM-DD HH:MM'。"""
+    try:
+        dt = datetime.strptime(date_str, "%a %b %d %H:%M:%S %z %Y")
+        return dt.strftime("%Y-%m-%d %H:%M")
+    except (ValueError, TypeError):
+        return ""
+
+
+def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
     """
     抓取指定 Twitter 用户的最近推文（排除转推和回复）。
     任何错误都返回空列表，不抛出异常（单人失败不影响整体流程）。
@@ -134,31 +144,32 @@ def fetch_tweets(handle: str, client: tweepy.Client) -> list[dict]:
     返回格式：[{"id": str, "text": str, "created_at": str, "url": str}]
     """
     try:
-        user_resp = client.get_user(username=handle)
-        if not user_resp.data:
-            logger.warning(f"Twitter 用户未找到：@{handle}")
+        response = client.get_user_tweets(handle, total=10, pagination=False)
+        if not response or not response.get("data"):
+            logger.warning(f"Twitter 用户未找到或无推文：@{handle}")
             return []
 
-        user_id = user_resp.data.id
-        tweets_resp = client.get_users_tweets(
-            id=user_id,
-            max_results=10,
-            tweet_fields=["created_at", "text"],
-            exclude=["retweets", "replies"],
-        )
+        results = []
+        for item in response["data"]:
+            tweet = Tweet(item)
+            if not tweet.full_text:
+                continue
+            # 排除转推
+            if tweet.full_text.startswith("RT @"):
+                continue
+            # 排除回复
+            if tweet.in_reply_to_status_id_str:
+                continue
 
-        if not tweets_resp.data:
-            return []
+            tweet_id = tweet.rest_id or tweet.id_str
+            results.append({
+                "id": tweet_id,
+                "text": tweet.full_text,
+                "created_at": _parse_twitter_date(tweet.created_at),
+                "url": tweet.tweet_url or f"https://x.com/{handle}/status/{tweet_id}",
+            })
 
-        return [
-            {
-                "id": str(t.id),
-                "text": t.text,
-                "created_at": t.created_at.strftime("%Y-%m-%d %H:%M") if t.created_at else "",
-                "url": f"https://twitter.com/{handle}/status/{t.id}",
-            }
-            for t in tweets_resp.data
-        ]
+        return results
     except Exception as e:
         logger.warning(f"@{handle} 抓取失败（已跳过）：{e}")
         return []
@@ -243,15 +254,12 @@ def render_html(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
 
-    if not bearer_token:
-        raise ValueError("TWITTER_BEARER_TOKEN 环境变量未设置")
     if not api_key:
         raise ValueError("ANTHROPIC_API_KEY 环境变量未设置")
 
-    twitter_client = tweepy.Client(bearer_token=bearer_token)
+    twitter_client = TweeterPy()
     anthropic_client = anthropic.Anthropic(api_key=api_key)
 
     people = load_config()

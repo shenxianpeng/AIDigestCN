@@ -16,9 +16,10 @@ pytest 测试 — pipeline.py 核心函数
   test_fetch_tweets_user_not_found    — 用户不存在时返回 []
   test_fetch_tweets_no_tweets         — 无推文时返回 []
   test_fetch_tweets_exception         — 任何异常返回 []（不抛出）
+  test_fetch_tweets_skip_retweets     — 过滤转推
+  test_fetch_tweets_skip_replies      — 过滤回复
   test_translate_success              — 正常翻译返回 title/summary/original
   test_translate_api_failure          — API 异常时返回 fallback dict
-  test_main_missing_twitter_token     — 缺少 TWITTER_BEARER_TOKEN 时抛出 ValueError
   test_main_missing_anthropic_key     — 缺少 ANTHROPIC_API_KEY 时抛出 ValueError
 """
 
@@ -36,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from pipeline import (
     TweetEntry,
+    _parse_twitter_date,
     fetch_tweets,
     load_config,
     load_processed_ids,
@@ -227,27 +229,52 @@ def test_render_html_empty():
 
 
 # ---------------------------------------------------------------------------
+# _parse_twitter_date
+# ---------------------------------------------------------------------------
+
+def test_parse_twitter_date_valid():
+    """正常格式的 Twitter 日期字符串应正确转换。"""
+    result = _parse_twitter_date("Mon Mar 22 09:00:00 +0000 2026")
+    assert result == "2026-03-22 09:00"
+
+
+def test_parse_twitter_date_invalid():
+    """无效格式时返回空字符串，不抛出异常。"""
+    assert _parse_twitter_date("not a date") == ""
+    assert _parse_twitter_date(None) == ""
+
+
+# ---------------------------------------------------------------------------
 # fetch_tweets
 # ---------------------------------------------------------------------------
 
-def _make_tweet(id_="111", text="hello", created_at=None):
-    """构造 mock 推文对象。"""
-    from datetime import datetime
-    t = MagicMock()
-    t.id = id_
-    t.text = text
-    t.created_at = created_at or datetime(2026, 3, 22, 9, 0)
-    return t
+def _make_tweet_item(
+    rest_id="111",
+    full_text="hello",
+    created_at="Mon Mar 22 09:00:00 +0000 2026",
+    in_reply_to_status_id_str=None,
+    screen_name="sama",
+):
+    """构造 mock Tweet 对象（模拟 tweeterpy.util.Tweet）。"""
+    tweet = MagicMock()
+    tweet.rest_id = rest_id
+    tweet.id_str = rest_id
+    tweet.full_text = full_text
+    tweet.created_at = created_at
+    tweet.in_reply_to_status_id_str = in_reply_to_status_id_str
+    tweet.screen_name = screen_name
+    tweet.tweet_url = f"https://x.com/{screen_name}/status/{rest_id}"
+    return tweet
 
 
 def test_fetch_tweets_happy_path():
     """正常情况：返回格式化的推文字典列表。"""
     mock_client = MagicMock()
-    mock_client.get_user.return_value.data.id = "123"
-    tweet = _make_tweet("111", "AGI is near")
-    mock_client.get_users_tweets.return_value.data = [tweet]
+    mock_tweet = _make_tweet_item("111", "AGI is near")
 
-    result = fetch_tweets("sama", mock_client)
+    with patch("pipeline.Tweet", return_value=mock_tweet):
+        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
+        result = fetch_tweets("sama", mock_client)
 
     assert len(result) == 1
     assert result[0]["id"] == "111"
@@ -256,9 +283,9 @@ def test_fetch_tweets_happy_path():
 
 
 def test_fetch_tweets_user_not_found():
-    """用户不存在（data=None）时返回空列表，不抛出异常。"""
+    """响应为空时返回空列表，不抛出异常。"""
     mock_client = MagicMock()
-    mock_client.get_user.return_value.data = None
+    mock_client.get_user_tweets.return_value = None
 
     result = fetch_tweets("nonexistent_user", mock_client)
 
@@ -266,10 +293,9 @@ def test_fetch_tweets_user_not_found():
 
 
 def test_fetch_tweets_no_tweets():
-    """用户存在但无推文（tweets_resp.data=None）时返回空列表。"""
+    """data 列表为空时返回空列表。"""
     mock_client = MagicMock()
-    mock_client.get_user.return_value.data.id = "123"
-    mock_client.get_users_tweets.return_value.data = None
+    mock_client.get_user_tweets.return_value = {"data": []}
 
     result = fetch_tweets("sama", mock_client)
 
@@ -279,9 +305,33 @@ def test_fetch_tweets_no_tweets():
 def test_fetch_tweets_exception():
     """任何 API 异常都返回空列表，不向上抛出。"""
     mock_client = MagicMock()
-    mock_client.get_user.side_effect = Exception("network error")
+    mock_client.get_user_tweets.side_effect = Exception("network error")
 
     result = fetch_tweets("sama", mock_client)
+
+    assert result == []
+
+
+def test_fetch_tweets_skip_retweets():
+    """以 'RT @' 开头的推文应被过滤。"""
+    mock_client = MagicMock()
+    mock_tweet = _make_tweet_item("111", "RT @someone: some text")
+
+    with patch("pipeline.Tweet", return_value=mock_tweet):
+        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
+        result = fetch_tweets("sama", mock_client)
+
+    assert result == []
+
+
+def test_fetch_tweets_skip_replies():
+    """有 in_reply_to_status_id_str 的推文（回复）应被过滤。"""
+    mock_client = MagicMock()
+    mock_tweet = _make_tweet_item("111", "This is a reply", in_reply_to_status_id_str="999")
+
+    with patch("pipeline.Tweet", return_value=mock_tweet):
+        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
+        result = fetch_tweets("sama", mock_client)
 
     assert result == []
 
@@ -322,21 +372,9 @@ def test_translate_api_failure():
 # main — 环境变量缺失检查
 # ---------------------------------------------------------------------------
 
-def test_main_missing_twitter_token():
-    """缺少 TWITTER_BEARER_TOKEN 时抛出 ValueError。"""
-    with patch.dict("os.environ", {"TWITTER_BEARER_TOKEN": "", "ANTHROPIC_API_KEY": "sk-test"}, clear=False):
-        # 确保 key 不存在
-        import os
-        env = {"ANTHROPIC_API_KEY": "sk-test"}
-        with patch.dict(os.environ, env, clear=True):
-            with pytest.raises(ValueError, match="TWITTER_BEARER_TOKEN"):
-                main()
-
-
 def test_main_missing_anthropic_key():
     """缺少 ANTHROPIC_API_KEY 时抛出 ValueError。"""
     import os
-    env = {"TWITTER_BEARER_TOKEN": "tok-test"}
-    with patch.dict(os.environ, env, clear=True):
+    with patch.dict(os.environ, {}, clear=True):
         with pytest.raises(ValueError, match="ANTHROPIC_API_KEY"):
             main()
