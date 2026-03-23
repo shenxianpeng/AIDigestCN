@@ -288,6 +288,10 @@ def test_is_within_lookback_boundary():
 # fetch_tweets
 # ---------------------------------------------------------------------------
 
+# Twitter API 日期格式（用于测试 mock 数据）
+_TWITTER_DATE_FMT = "%a %b %d %H:%M:%S +0000 %Y"
+
+
 def _make_tweet_item(
     rest_id="111",
     full_text="hello",
@@ -416,3 +420,116 @@ def test_main_missing_gemini_key():
     with patch.dict(os.environ, {}, clear=True):
         with pytest.raises(ValueError, match="GEMINI_API_KEY"):
             main()
+
+
+# ---------------------------------------------------------------------------
+# main — first run vs. subsequent run lookback behavior
+# ---------------------------------------------------------------------------
+
+def _make_main_mocks(
+    tmp_path,
+    people_yml,
+    processed_ids_content,
+    tweet_items,
+    translated_text="TITLE: 标题\nSUMMARY: 摘要",
+):
+    """Helper: write config files and return (people_file, ids_file, mock_twitter, mock_gemini)."""
+    people_file = tmp_path / "people.yml"
+    people_file.write_text(yaml.dump(people_yml), encoding="utf-8")
+    ids_file = tmp_path / "processed_ids.json"
+    ids_file.write_text(json.dumps({"ids": processed_ids_content}))
+
+    mock_twitter = MagicMock()
+    mock_twitter.get_user_tweets.return_value = {"data": [MagicMock() for _ in tweet_items]}
+
+    mock_gemini = MagicMock()
+    mock_gemini.models.generate_content.return_value.text = translated_text
+
+    return people_file, ids_file, mock_twitter, mock_gemini
+
+
+def test_main_first_run_processes_old_tweets(tmp_path):
+    """首次运行（processed_ids 为空）时，超出 lookback 窗口的旧推文也应被处理。"""
+    people_yml = {
+        "people": [{
+            "id": "test_user",
+            "name": "Test User",
+            "twitter_handle": "testuser",
+            "sources": [{"type": "twitter", "enabled": True}],
+        }]
+    }
+
+    # Tweet created well outside the lookback window
+    old_date = (date.today() - timedelta(days=LOOKBACK_DAYS + 10)).strftime(
+        _TWITTER_DATE_FMT
+    )
+    mock_tweet = _make_tweet_item("999", "Old but valid tweet", created_at=old_date)
+
+    people_file, ids_file, mock_twitter, mock_gemini = _make_main_mocks(
+        tmp_path,
+        people_yml,
+        processed_ids_content=[],  # ← 空：首次运行
+        tweet_items=[mock_tweet],
+    )
+    docs_dir = tmp_path / "docs"
+    archive_dir = docs_dir / "archive"
+
+    with (
+        patch("pipeline.Tweet", return_value=mock_tweet),
+        patch("pipeline.PEOPLE_FILE", people_file),
+        patch("pipeline.PROCESSED_IDS_FILE", ids_file),
+        patch("pipeline.DOCS_DIR", docs_dir),
+        patch("pipeline.ARCHIVE_DIR", archive_dir),
+        patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
+        patch("pipeline.TweeterPy", return_value=mock_twitter),
+        patch("pipeline.genai.Client", return_value=mock_gemini),
+        patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key"}),
+    ):
+        main()
+
+    # processed_ids should now contain the old tweet's ID
+    saved = load_processed_ids(ids_file)
+    assert "999" in saved, "首次运行应处理超出 lookback 窗口的旧推文"
+
+
+def test_main_subsequent_run_skips_old_tweets(tmp_path):
+    """后续运行时，超出 lookback 窗口的旧推文应被跳过。"""
+    people_yml = {
+        "people": [{
+            "id": "test_user",
+            "name": "Test User",
+            "twitter_handle": "testuser",
+            "sources": [{"type": "twitter", "enabled": True}],
+        }]
+    }
+
+    old_date = (date.today() - timedelta(days=LOOKBACK_DAYS + 10)).strftime(
+        _TWITTER_DATE_FMT
+    )
+    mock_tweet = _make_tweet_item("888", "Old tweet on subsequent run", created_at=old_date)
+
+    people_file, ids_file, mock_twitter, mock_gemini = _make_main_mocks(
+        tmp_path,
+        people_yml,
+        processed_ids_content=["111"],  # ← 非空：后续运行
+        tweet_items=[mock_tweet],
+    )
+    docs_dir = tmp_path / "docs"
+    archive_dir = docs_dir / "archive"
+
+    with (
+        patch("pipeline.Tweet", return_value=mock_tweet),
+        patch("pipeline.PEOPLE_FILE", people_file),
+        patch("pipeline.PROCESSED_IDS_FILE", ids_file),
+        patch("pipeline.DOCS_DIR", docs_dir),
+        patch("pipeline.ARCHIVE_DIR", archive_dir),
+        patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
+        patch("pipeline.TweeterPy", return_value=mock_twitter),
+        patch("pipeline.genai.Client", return_value=mock_gemini),
+        patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key"}),
+    ):
+        main()
+
+    # The old tweet should NOT have been added to processed_ids
+    saved = load_processed_ids(ids_file)
+    assert "888" not in saved, "后续运行应跳过超出 lookback 窗口的旧推文"

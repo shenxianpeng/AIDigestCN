@@ -56,7 +56,8 @@ TEMPLATES_DIR = ROOT / "templates"
 # Only consider tweets published within this many days of today.
 # This keeps each daily run focused on recent content and prevents the
 # ever-growing processed_ids.json from masking genuinely new tweets.
-LOOKBACK_DAYS = 3
+# Set to 7 to accommodate users who don't tweet every day.
+LOOKBACK_DAYS = 7
 
 # LLM prompt — 固定模板，稳定输出格式
 PROMPT_TEMPLATE = """\
@@ -184,16 +185,21 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
             logger.warning(f"Twitter 用户未找到或无推文：@{handle}")
             return []
 
+        raw_count = len(response["data"])
         results = []
+        skipped_no_text = skipped_rt = skipped_reply = 0
         for item in response["data"]:
             tweet = Tweet(item)
             if not tweet.full_text:
+                skipped_no_text += 1
                 continue
             # 排除转推
             if tweet.full_text.startswith("RT @"):
+                skipped_rt += 1
                 continue
             # 排除回复
             if tweet.in_reply_to_status_id_str:
+                skipped_reply += 1
                 continue
 
             tweet_id = tweet.rest_id or tweet.id_str
@@ -204,6 +210,10 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
                 "url": tweet.tweet_url or f"https://x.com/{handle}/status/{tweet_id}",
             })
 
+        logger.info(
+            f"  @{handle}: 原始={raw_count}, 无文本={skipped_no_text}, "
+            f"转推={skipped_rt}, 回复={skipped_reply}, 有效={len(results)}"
+        )
         return results
     except Exception as e:
         logger.warning(f"@{handle} 抓取失败（已跳过）：{e}")
@@ -300,9 +310,16 @@ def main() -> None:
 
     gemini_client = genai.Client(api_key=api_key)
 
-    people = load_config()
-    processed_ids = load_processed_ids()
+    people = load_config(PEOPLE_FILE)
+    processed_ids = load_processed_ids(PROCESSED_IDS_FILE)
     today = date.today().isoformat()
+
+    # On the very first run processed_ids is empty; skip the lookback window
+    # so that we always bootstrap with whatever recent tweets are available,
+    # regardless of how old they are relative to LOOKBACK_DAYS.
+    is_first_run = not processed_ids
+    if is_first_run:
+        logger.info("processed_ids 为空，首次运行：跳过 lookback 窗口过滤")
 
     entries: list[TweetEntry] = []
     new_ids: set[str] = set()
@@ -320,7 +337,12 @@ def main() -> None:
             # Skip tweets that fall outside the rolling lookback window so that
             # an ever-growing processed_ids.json does not cause all fetched tweets
             # to look "already processed" after a few pipeline runs.
-            if not _is_within_lookback(tweet["created_at"]):
+            # Always process all tweets on the first run (processed_ids empty).
+            if not is_first_run and not _is_within_lookback(tweet["created_at"]):
+                logger.debug(
+                    f"  跳过推文 {tweet['id']}（日期 {tweet['created_at']} 超出 "
+                    f"{LOOKBACK_DAYS} 天窗口）"
+                )
                 continue
 
             logger.info(f"  翻译推文 {tweet['id']}")
@@ -347,7 +369,7 @@ def main() -> None:
     (ARCHIVE_DIR / f"{today}.html").write_text(html, encoding="utf-8")
 
     # 更新去重状态
-    save_processed_ids(processed_ids | new_ids)
+    save_processed_ids(processed_ids | new_ids, PROCESSED_IDS_FILE)
 
     logger.info(f"完成：{len(entries)} 条新内容，日期 {today}")
 
