@@ -6,7 +6,7 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
       │
       ▼
   fetch_tweets()      ← TweeterPy (无需 Bearer Token，使用 Guest Session)
-      │ new tweets only (去重: processed_ids.json)
+      │ new tweets only (去重: processed_ids.json + LOOKBACK_DAYS 窗口)
       ▼
   translate()         ← Gemini Flash (TITLE: / SUMMARY: 格式)
       │
@@ -22,7 +22,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from google import genai
@@ -31,7 +31,19 @@ from jinja2 import Environment, FileSystemLoader
 from tweeterpy import TweeterPy
 from tweeterpy.util import Tweet
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+# Configure logging AFTER TweeterPy imports.
+# TweeterPy calls logging.config.dictConfig() at import time, which installs
+# handlers on both the root logger and the "__main__" logger.  Without the fix
+# below, every pipeline log line appears twice (once from the "__main__" handler
+# and once via propagation to the root handler).
+logging.basicConfig(
+    force=True,
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] :: %(message)s",
+)
+# Remove the extra handlers TweeterPy attached to the "__main__" named logger so
+# that messages are only emitted once (through the root handler configured above).
+logging.getLogger("__main__").handlers.clear()
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).parent.parent
@@ -40,6 +52,11 @@ PROCESSED_IDS_FILE = ROOT / "processed_ids.json"
 DOCS_DIR = ROOT / "docs"
 ARCHIVE_DIR = DOCS_DIR / "archive"
 TEMPLATES_DIR = ROOT / "templates"
+
+# Only consider tweets published within this many days of today.
+# This keeps each daily run focused on recent content and prevents the
+# ever-growing processed_ids.json from masking genuinely new tweets.
+LOOKBACK_DAYS = 3
 
 # LLM prompt — 固定模板，稳定输出格式
 PROMPT_TEMPLATE = """\
@@ -51,6 +68,24 @@ SUMMARY: [中文翻译，保留原意，不超过 100 字]
 
 推文原文：
 {tweet_text}"""
+
+
+# ---------------------------------------------------------------------------
+# 辅助工具
+# ---------------------------------------------------------------------------
+
+def _is_within_lookback(tweet_date: str) -> bool:
+    """
+    Return True if *tweet_date* (``'YYYY-MM-DD HH:MM'`` or ``'YYYY-MM-DD'``)
+    falls within the rolling lookback window defined by :data:`LOOKBACK_DAYS`.
+
+    An empty / None date is treated as *recent* so the tweet is not silently
+    dropped when date parsing fails.
+    """
+    if not tweet_date:
+        return True
+    cutoff = (date.today() - timedelta(days=LOOKBACK_DAYS)).isoformat()
+    return tweet_date[:10] >= cutoff
 
 
 # ---------------------------------------------------------------------------
@@ -255,7 +290,14 @@ def main() -> None:
     if not api_key:
         raise ValueError("GEMINI_API_KEY 环境变量未设置")
 
-    twitter_client = TweeterPy()
+    # log_level="ERROR" suppresses TweeterPy's INFO/WARNING noise (including the
+    # harmless "[Errno 2] No such file or directory: '/tmp/tweeterpy_api.json'"
+    # warning that appears on every clean CI run).  TweeterPy's constructor also
+    # calls set_log_level() which resets ALL named loggers; restore our level
+    # immediately afterwards so pipeline INFO messages remain visible.
+    twitter_client = TweeterPy(log_level="ERROR")
+    logger.setLevel(logging.INFO)
+
     gemini_client = genai.Client(api_key=api_key)
 
     people = load_config()
@@ -274,6 +316,11 @@ def main() -> None:
 
         for tweet in tweets:
             if tweet["id"] in processed_ids:
+                continue
+            # Skip tweets that fall outside the rolling lookback window so that
+            # an ever-growing processed_ids.json does not cause all fetched tweets
+            # to look "already processed" after a few pipeline runs.
+            if not _is_within_lookback(tweet["created_at"]):
                 continue
 
             logger.info(f"  翻译推文 {tweet['id']}")

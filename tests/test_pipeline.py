@@ -24,8 +24,10 @@ pytest 测试 — pipeline.py 核心函数
 """
 
 import json
+import os
 import sys
 import textwrap
+from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -37,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from pipeline import (
     TweetEntry,
+    _is_within_lookback,
     _parse_twitter_date,
     fetch_tweets,
     load_config,
@@ -242,6 +245,43 @@ def test_parse_twitter_date_invalid():
     """无效格式时返回空字符串，不抛出异常。"""
     assert _parse_twitter_date("not a date") == ""
     assert _parse_twitter_date(None) == ""
+
+
+# ---------------------------------------------------------------------------
+# _is_within_lookback
+# ---------------------------------------------------------------------------
+
+from pipeline import LOOKBACK_DAYS
+
+
+def test_is_within_lookback_today():
+    """今天的推文应在窗口内。"""
+    today = date.today().isoformat()
+    assert _is_within_lookback(today) is True
+
+
+def test_is_within_lookback_recent_with_time():
+    """'YYYY-MM-DD HH:MM' 格式的近期推文应在窗口内。"""
+    today = date.today().isoformat() + " 12:00"
+    assert _is_within_lookback(today) is True
+
+
+def test_is_within_lookback_old_tweet():
+    """超出窗口期的旧推文应返回 False。"""
+    old = (date.today() - timedelta(days=LOOKBACK_DAYS + 1)).isoformat()
+    assert _is_within_lookback(old) is False
+
+
+def test_is_within_lookback_empty_date():
+    """无日期信息时应返回 True（不过滤，以免丢失数据）。"""
+    assert _is_within_lookback("") is True
+    assert _is_within_lookback(None) is True
+
+
+def test_is_within_lookback_boundary():
+    """恰好在窗口边界当天的推文应视为在窗口内。"""
+    boundary = (date.today() - timedelta(days=LOOKBACK_DAYS)).isoformat()
+    assert _is_within_lookback(boundary) is True
 
 
 # ---------------------------------------------------------------------------
