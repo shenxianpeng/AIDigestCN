@@ -317,12 +317,13 @@ def translate(tweet: dict, client: genai.Client) -> dict[str, str]:
 def render_html(
     entries: list[TweetEntry],
     today: str,
+    archive_url: str = "archive/",
     templates_dir: Path = TEMPLATES_DIR,
 ) -> str:
     """用 Jinja2 模板渲染 HTML。entries 为空时渲染空状态页面。"""
     env = Environment(loader=FileSystemLoader(str(templates_dir)), autoescape=True)
     template = env.get_template("day.html.j2")
-    return template.render(entries=entries, date=today)
+    return template.render(entries=entries, date=today, archive_url=archive_url)
 
 
 def render_archive_index(
@@ -413,9 +414,14 @@ def main() -> None:
     DOCS_DIR.mkdir(exist_ok=True)
     ARCHIVE_DIR.mkdir(exist_ok=True)
 
-    html = render_html(entries, today)
-    (DOCS_DIR / "index.html").write_text(html, encoding="utf-8")
-    (ARCHIVE_DIR / f"{today}.html").write_text(html, encoding="utf-8")
+    # Main page: archive link is "archive/" (relative to root)
+    # Archive date page: archive link is "./" (current directory = archive/)
+    (DOCS_DIR / "index.html").write_text(
+        render_html(entries, today, archive_url="archive/"), encoding="utf-8"
+    )
+    (ARCHIVE_DIR / f"{today}.html").write_text(
+        render_html(entries, today, archive_url="./"), encoding="utf-8"
+    )
 
     archive_index = render_archive_index(ARCHIVE_DIR)
     (ARCHIVE_DIR / "index.html").write_text(archive_index, encoding="utf-8")
