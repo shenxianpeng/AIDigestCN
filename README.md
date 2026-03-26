@@ -17,7 +17,6 @@
 | Secret | 说明 |
 |--------|------|
 | `TWITTER_BEARER_TOKEN` | Twitter API v2 Bearer Token（免费套餐即可） |
-| `GEMINI_API_KEY` | Google Gemini API Key |
 
 **2. 开启 GitHub Pages**
 
@@ -50,7 +49,7 @@ people:
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-export TWITTER_BEARER_TOKEN=xxx GEMINI_API_KEY=xxx
+export TWITTER_BEARER_TOKEN=xxx GITHUB_TOKEN=xxx
 python src/pipeline.py
 # 生成到 docs/index.html
 ```

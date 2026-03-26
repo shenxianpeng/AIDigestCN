@@ -8,7 +8,7 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
   fetch_tweets()      ← TweeterPy (无需 Bearer Token，使用 Guest Session)
       │ new tweets only (去重: processed_ids.json + LOOKBACK_DAYS 窗口)
       ▼
-  translate()         ← Gemini Flash (TITLE: / SUMMARY: 格式)
+  translate()         ← GitHub Copilot 模型 (TITLE: / SUMMARY: 格式)
       │
       ▼
   render_html()       ← Jinja2 模板
@@ -18,16 +18,16 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
   processed_ids.json  ← 更新去重状态（由 Actions 提交到 main）
 """
 
+import asyncio
 import json
 import logging
 import os
-import re
 import time
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from google import genai
+from copilot import CopilotClient, SubprocessConfig, PermissionHandler
 import yaml
 from jinja2 import Environment, FileSystemLoader
 from tweeterpy import TweeterPy
@@ -64,9 +64,11 @@ LOOKBACK_DAYS = 7
 # original tweets when a user's latest posts are mostly replies/retweets.
 FETCH_TWEETS_PER_USER = int(os.environ.get("TWEETS_PER_USER", "40"))
 
-# Gemini 免费 tier 限制：每分钟 5 次请求，间隔至少 12 秒
-_GEMINI_MIN_INTERVAL = 12.0  # seconds
-_last_gemini_request: float = 0.0
+# GitHub Copilot SDK 配置
+# 通过环境变量可覆盖模型名称，默认使用 gpt-4o-mini
+COPILOT_MODEL = os.environ.get("COPILOT_MODEL", "gpt-4o-mini")
+# 调试时可将 COPILOT_LOG_LEVEL 设为 "info" 以查看 Copilot CLI 输出
+COPILOT_LOG_LEVEL = os.environ.get("COPILOT_LOG_LEVEL", "error")
 
 # LLM prompt — 固定模板，稳定输出格式
 PROMPT_TEMPLATE = """\
@@ -274,25 +276,32 @@ def parse_llm_output(text: str, original: str) -> dict[str, str]:
     }
 
 
-def _extract_retry_delay(error_str: str) -> float:
-    """从 429 错误信息中解析建议的重试等待秒数，解析失败时默认 60 秒。"""
-    match = re.search(r"retryDelay['\"]:\s*['\"](\d+)s", error_str)
-    if match:
-        return float(match.group(1)) + 2.0  # 额外留 2 秒缓冲
-    return 60.0
-
-
-def translate(tweet: dict, client: genai.Client) -> dict[str, str]:
+async def _do_translate(tweet_text: str, github_token: str) -> str:
     """
-    用 Gemini Flash 翻译一条推文。
-    - 每次请求前强制间隔 _GEMINI_MIN_INTERVAL 秒，避免超出免费 tier 速率限制。
-    - 遇到 429 时读取 retryDelay 并自动重试，最多 3 次。
+    用 GitHub Copilot SDK 发起一次翻译请求，返回 LLM 的原始文本响应。
+    每次调用都会启动一个 Copilot CLI 进程并在结束时关闭。
+    """
+    config = SubprocessConfig(github_token=github_token, log_level=COPILOT_LOG_LEVEL)
+    async with CopilotClient(config) as client:
+        async with await client.create_session(
+            on_permission_request=PermissionHandler.approve_all,
+            model=COPILOT_MODEL,
+        ) as session:
+            event = await session.send_and_wait(
+                PROMPT_TEMPLATE.format(tweet_text=tweet_text),
+                timeout=120.0,
+            )
+    return event.data.content if event and event.data.content else ""
+
+
+def translate(tweet: dict, github_token: str) -> dict[str, str]:
+    """
+    用 GitHub Copilot SDK 翻译一条推文。
+    - 遇到 429 速率限制时自动等待 60 秒后重试，最多 3 次。
     - API 最终失败时返回原文 fallback（不抛出异常）。
 
     返回格式：{"title": str, "summary": str, "original": str}
     """
-    global _last_gemini_request
-
     fallback = {
         "title": "（翻译失败）",
         "summary": tweet["text"],
@@ -300,27 +309,17 @@ def translate(tweet: dict, client: genai.Client) -> dict[str, str]:
     }
 
     for attempt in range(3):
-        # 速率限制：距上次请求不足间隔时主动等待
-        elapsed = time.time() - _last_gemini_request
-        if elapsed < _GEMINI_MIN_INTERVAL:
-            time.sleep(_GEMINI_MIN_INTERVAL - elapsed)
-
         try:
-            _last_gemini_request = time.time()
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=PROMPT_TEMPLATE.format(tweet_text=tweet["text"]),
-            )
-            raw = response.text
+            raw = asyncio.run(_do_translate(tweet["text"], github_token))
+            if not raw:
+                raise ValueError("Copilot 返回空响应")
             parsed = parse_llm_output(raw, tweet["text"])
             return {**parsed, "original": tweet["text"]}
         except Exception as e:
             error_str = str(e)
             if "429" in error_str and attempt < 2:
-                delay = _extract_retry_delay(error_str)
-                logger.warning(f"  触发速率限制，等待 {delay:.0f}s 后重试（第 {attempt + 1} 次）…")
-                time.sleep(delay)
-                _last_gemini_request = 0.0  # 重置，让重试后立即发出请求
+                logger.warning(f"  触发速率限制，等待 60s 后重试（第 {attempt + 1} 次）…")
+                time.sleep(60)
             else:
                 logger.warning(f"LLM 翻译失败（使用原文 fallback）：{e}")
                 return fallback
@@ -363,10 +362,10 @@ def render_archive_index(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    api_key = os.environ.get("GEMINI_API_KEY")
+    github_token = os.environ.get("GITHUB_TOKEN")
 
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY 环境变量未设置")
+    if not github_token:
+        raise ValueError("GITHUB_TOKEN 环境变量未设置")
 
     # log_level="CRITICAL" suppresses TweeterPy's INFO/WARNING/ERROR noise
     # (including the harmless "[Errno 2] No such file or directory: '/tmp/tweeterpy_api.json'"
@@ -394,8 +393,6 @@ def main() -> None:
             " Guest Session 仅能访问约 2025-11 以前的历史推文，无法获取当前内容。"
             " 请在 GitHub Secrets 中配置 TWITTER_AUTH_TOKEN 以获取最新推文。"
         )
-
-    gemini_client = genai.Client(api_key=api_key)
 
     people = load_config(PEOPLE_FILE)
     processed_ids = load_processed_ids(PROCESSED_IDS_FILE)
@@ -437,7 +434,7 @@ def main() -> None:
                 continue
 
             logger.info(f"  翻译推文 {tweet['id']}")
-            translated = translate(tweet, gemini_client)
+            translated = translate(tweet, github_token)
 
             entries.append(TweetEntry(
                 tweet_id=tweet["id"],
