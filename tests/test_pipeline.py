@@ -220,14 +220,14 @@ def test_render_html_with_entries():
     assert "这是中文摘要。" in html
     assert "Original tweet" in html
     assert "https://twitter.com/sama/status/1" in html
-    assert "今日无新内容" not in html
+    assert "今日暂无新内容" not in html
 
 
 def test_render_html_empty():
     """无内容时，HTML 包含空状态提示，不包含条目结构。"""
     html = render_html([], today="2026-03-22", templates_dir=TEMPLATES_DIR)
 
-    assert "今日无新内容" in html
+    assert "今日暂无新内容" in html
     assert "Sam Altman" not in html
 
 

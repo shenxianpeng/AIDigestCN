@@ -212,7 +212,7 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
                 "id": tweet_id,
                 "text": tweet.full_text,
                 "created_at": _parse_twitter_date(tweet.created_at),
-                "url": tweet.tweet_url or f"https://x.com/{handle}/status/{tweet_id}",
+                "url": f"https://x.com/{handle}/status/{tweet_id}",
             })
 
         logger.info(
@@ -419,9 +419,10 @@ def main() -> None:
     (DOCS_DIR / "index.html").write_text(
         render_html(entries, today, archive_url="archive/"), encoding="utf-8"
     )
-    (ARCHIVE_DIR / f"{today}.html").write_text(
-        render_html(entries, today, archive_url="./"), encoding="utf-8"
-    )
+    if entries:
+        (ARCHIVE_DIR / f"{today}.html").write_text(
+            render_html(entries, today, archive_url="./"), encoding="utf-8"
+        )
 
     archive_index = render_archive_index(ARCHIVE_DIR)
     (ARCHIVE_DIR / "index.html").write_text(archive_index, encoding="utf-8")
