@@ -49,7 +49,10 @@ jobs:
       - name: Run pipeline
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TWITTER_AUTH_TOKEN: ${{ secrets.TWITTER_AUTH_TOKEN }}
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
         run: python src/pipeline.py
 
       - name: Commit processed_ids to main
