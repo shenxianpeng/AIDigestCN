@@ -20,7 +20,7 @@ pytest 测试 — pipeline.py 核心函数
   test_fetch_tweets_skip_replies      — 过滤回复
   test_translate_success              — 正常翻译返回 title/summary/original
   test_translate_api_failure          — API 异常时返回 fallback dict
-  test_main_missing_gemini_key        — 缺少 GEMINI_API_KEY 时抛出 ValueError
+  test_main_missing_github_token      — 缺少 GITHUB_TOKEN 时抛出 ValueError
 """
 
 import json
@@ -465,7 +465,9 @@ def test_fetch_tweets_skip_none_tweet_id():
 def test_translate_success():
     """正常翻译：返回含 title、summary、original 的字典。"""
     mock_client = MagicMock()
-    mock_client.models.generate_content.return_value.text = "TITLE: AGI 近了\nSUMMARY: Altman 认为 AGI 比预期更近。"
+    mock_response = MagicMock()
+    mock_response.choices[0].message.content = "TITLE: AGI 近了\nSUMMARY: Altman 认为 AGI 比预期更近。"
+    mock_client.chat.completions.create.return_value = mock_response
 
     tweet = {"id": "1", "text": "AGI is coming sooner than expected.", "created_at": "2026-03-22 09:00"}
     result = translate(tweet, mock_client)
@@ -478,7 +480,7 @@ def test_translate_success():
 def test_translate_api_failure():
     """API 异常时返回 fallback dict，不向上抛出。"""
     mock_client = MagicMock()
-    mock_client.models.generate_content.side_effect = Exception("api timeout")
+    mock_client.chat.completions.create.side_effect = Exception("api timeout")
 
     tweet = {"id": "1", "text": "The original tweet text.", "created_at": "2026-03-22 09:00"}
     result = translate(tweet, mock_client)
@@ -492,11 +494,11 @@ def test_translate_api_failure():
 # main — 环境变量缺失检查
 # ---------------------------------------------------------------------------
 
-def test_main_missing_gemini_key():
-    """缺少 GEMINI_API_KEY 时抛出 ValueError。"""
+def test_main_missing_github_token():
+    """缺少 GITHUB_TOKEN 时抛出 ValueError。"""
     import os
     with patch.dict(os.environ, {}, clear=True):
-        with pytest.raises(ValueError, match="GEMINI_API_KEY"):
+        with pytest.raises(ValueError, match="GITHUB_TOKEN"):
             main()
 
 
@@ -511,7 +513,7 @@ def _make_main_mocks(
     tweet_items,
     translated_text="TITLE: 标题\nSUMMARY: 摘要",
 ):
-    """Helper: write config files and return (people_file, ids_file, mock_twitter, mock_gemini)."""
+    """Helper: write config files and return (people_file, ids_file, mock_twitter, mock_copilot)."""
     people_file = tmp_path / "people.yml"
     people_file.write_text(yaml.dump(people_yml), encoding="utf-8")
     ids_file = tmp_path / "processed_ids.json"
@@ -520,10 +522,12 @@ def _make_main_mocks(
     mock_twitter = MagicMock()
     mock_twitter.get_user_tweets.return_value = {"data": [MagicMock() for _ in tweet_items]}
 
-    mock_gemini = MagicMock()
-    mock_gemini.models.generate_content.return_value.text = translated_text
+    mock_copilot = MagicMock()
+    mock_response = MagicMock()
+    mock_response.choices[0].message.content = translated_text
+    mock_copilot.chat.completions.create.return_value = mock_response
 
-    return people_file, ids_file, mock_twitter, mock_gemini
+    return people_file, ids_file, mock_twitter, mock_copilot
 
 
 def test_main_first_run_processes_old_tweets(tmp_path):
@@ -543,7 +547,7 @@ def test_main_first_run_processes_old_tweets(tmp_path):
     )
     mock_tweet = _make_tweet_item("999", "Old but valid tweet", created_at=old_date)
 
-    people_file, ids_file, mock_twitter, mock_gemini = _make_main_mocks(
+    people_file, ids_file, mock_twitter, mock_copilot = _make_main_mocks(
         tmp_path,
         people_yml,
         processed_ids_content=[],  # ← 空：首次运行
@@ -560,8 +564,8 @@ def test_main_first_run_processes_old_tweets(tmp_path):
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
         patch("pipeline.TweeterPy", return_value=mock_twitter),
-        patch("pipeline.genai.Client", return_value=mock_gemini),
-        patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key"}),
+        patch("pipeline.OpenAI", return_value=mock_copilot),
+        patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}),
     ):
         main()
 
@@ -586,7 +590,7 @@ def test_main_subsequent_run_skips_old_tweets(tmp_path):
     )
     mock_tweet = _make_tweet_item("888", "Old tweet on subsequent run", created_at=old_date)
 
-    people_file, ids_file, mock_twitter, mock_gemini = _make_main_mocks(
+    people_file, ids_file, mock_twitter, mock_copilot = _make_main_mocks(
         tmp_path,
         people_yml,
         processed_ids_content=["111"],  # ← 非空：后续运行
@@ -603,8 +607,8 @@ def test_main_subsequent_run_skips_old_tweets(tmp_path):
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
         patch("pipeline.TweeterPy", return_value=mock_twitter),
-        patch("pipeline.genai.Client", return_value=mock_gemini),
-        patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key"}),
+        patch("pipeline.OpenAI", return_value=mock_copilot),
+        patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}),
     ):
         main()
 
@@ -634,7 +638,7 @@ def test_main_calls_generate_session_with_auth_token(tmp_path):
 
     mock_twitter = MagicMock()
     mock_twitter.get_user_tweets.return_value = {"data": []}
-    mock_gemini = MagicMock()
+    mock_copilot = MagicMock()
 
     docs_dir = tmp_path / "docs"
     archive_dir = docs_dir / "archive"
@@ -646,8 +650,8 @@ def test_main_calls_generate_session_with_auth_token(tmp_path):
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
         patch("pipeline.TweeterPy", return_value=mock_twitter),
-        patch("pipeline.genai.Client", return_value=mock_gemini),
-        patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key", "TWITTER_AUTH_TOKEN": "my-secret-token"}),
+        patch("pipeline.OpenAI", return_value=mock_copilot),
+        patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token", "TWITTER_AUTH_TOKEN": "my-secret-token"}),
     ):
         main()
 
@@ -671,14 +675,14 @@ def test_main_no_auth_token_skips_generate_session(tmp_path):
 
     mock_twitter = MagicMock()
     mock_twitter.get_user_tweets.return_value = {"data": []}
-    mock_gemini = MagicMock()
+    mock_copilot = MagicMock()
 
     docs_dir = tmp_path / "docs"
     archive_dir = docs_dir / "archive"
 
     # Remove TWITTER_AUTH_TOKEN from env entirely
     env_without_token = {k: v for k, v in os.environ.items() if k != "TWITTER_AUTH_TOKEN"}
-    env_without_token["GEMINI_API_KEY"] = "fake-key"
+    env_without_token["GITHUB_TOKEN"] = "fake-token"
 
     with (
         patch("pipeline.PEOPLE_FILE", people_file),
@@ -687,7 +691,7 @@ def test_main_no_auth_token_skips_generate_session(tmp_path):
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
         patch("pipeline.TweeterPy", return_value=mock_twitter),
-        patch("pipeline.genai.Client", return_value=mock_gemini),
+        patch("pipeline.OpenAI", return_value=mock_copilot),
         patch.dict(os.environ, env_without_token, clear=True),
     ):
         main()
