@@ -368,12 +368,15 @@ def main() -> None:
     if not api_key:
         raise ValueError("GEMINI_API_KEY 环境变量未设置")
 
-    # log_level="ERROR" suppresses TweeterPy's INFO/WARNING noise (including the
-    # harmless "[Errno 2] No such file or directory: '/tmp/tweeterpy_api.json'"
-    # warning that appears on every clean CI run).  TweeterPy's constructor also
-    # calls set_log_level() which resets ALL named loggers; restore our level
-    # immediately afterwards so pipeline INFO messages remain visible.
-    twitter_client = TweeterPy(log_level="ERROR")
+    # log_level="CRITICAL" suppresses TweeterPy's INFO/WARNING/ERROR noise
+    # (including the harmless "[Errno 2] No such file or directory: '/tmp/tweeterpy_api.json'"
+    # warning that appears on every clean CI run, and the rate-limit ERROR messages
+    # that TweeterPy logs internally when it hits HTTP 429 — those would otherwise
+    # appear as ##[error] annotations in GitHub Actions even though the pipeline
+    # handles them gracefully).  TweeterPy's constructor also calls set_log_level()
+    # which resets ALL named loggers; restore our level immediately afterwards so
+    # pipeline INFO messages remain visible.
+    twitter_client = TweeterPy(log_level="CRITICAL")
     logger.setLevel(logging.INFO)
 
     # Authenticated sessions have access to the full current timeline.
