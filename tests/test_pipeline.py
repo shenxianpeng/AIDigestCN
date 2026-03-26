@@ -16,8 +16,7 @@ pytest 测试 — pipeline.py 核心函数
   test_fetch_tweets_user_not_found    — 用户不存在时返回 []
   test_fetch_tweets_no_tweets         — 无推文时返回 []
   test_fetch_tweets_exception         — 任何异常返回 []（不抛出）
-  test_fetch_tweets_skip_retweets     — 过滤转推
-  test_fetch_tweets_skip_replies      — 过滤回复
+  test_fetch_tweets_calls_api_params  — 验证传递正确的 API 参数
   test_translate_success              — 正常翻译返回 title/summary/original
   test_translate_api_failure          — API 异常时返回 fallback dict
   test_main_missing_github_token      — 缺少 GITHUB_TOKEN 时抛出 ValueError
@@ -27,7 +26,7 @@ import json
 import os
 import sys
 import textwrap
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -40,7 +39,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from pipeline import (
     TweetEntry,
     _is_within_lookback,
-    _parse_twitter_date,
     fetch_tweets,
     load_config,
     load_processed_ids,
@@ -245,22 +243,6 @@ def test_render_html_empty():
 
 
 # ---------------------------------------------------------------------------
-# _parse_twitter_date
-# ---------------------------------------------------------------------------
-
-def test_parse_twitter_date_valid():
-    """正常格式的 Twitter 日期字符串应正确转换。"""
-    result = _parse_twitter_date("Mon Mar 22 09:00:00 +0000 2026")
-    assert result == "2026-03-22 09:00"
-
-
-def test_parse_twitter_date_invalid():
-    """无效格式时返回空字符串，不抛出异常。"""
-    assert _parse_twitter_date("not a date") == ""
-    assert _parse_twitter_date(None) == ""
-
-
-# ---------------------------------------------------------------------------
 # _is_within_lookback
 # ---------------------------------------------------------------------------
 
@@ -301,63 +283,74 @@ def test_is_within_lookback_boundary():
 # fetch_tweets
 # ---------------------------------------------------------------------------
 
-# Twitter API 日期格式（用于测试 mock 数据）
-_TWITTER_DATE_FMT = "%a %b %d %H:%M:%S +0000 %Y"
+
+_DEFAULT_DT = datetime(2026, 3, 22, 9, 0, 0, tzinfo=timezone.utc)
 
 
-def _make_tweet_item(
-    rest_id="111",
-    full_text="hello",
-    created_at="Mon Mar 22 09:00:00 +0000 2026",
-    in_reply_to_status_id_str=None,
-    screen_name="sama",
-):
-    """构造 mock Tweet 对象（模拟 tweeterpy.util.Tweet）。"""
+def _make_tweet(tweet_id=111, text="hello", created_at=_DEFAULT_DT):
+    """构造 mock Tweet 对象（模拟 tweepy.Tweet）。"""
     tweet = MagicMock()
-    tweet.rest_id = rest_id
-    tweet.id_str = rest_id
-    tweet.full_text = full_text
+    tweet.id = tweet_id
+    tweet.text = text
     tweet.created_at = created_at
-    tweet.in_reply_to_status_id_str = in_reply_to_status_id_str
-    tweet.screen_name = screen_name
-    tweet.tweet_url = f"https://x.com/{screen_name}/status/{rest_id}"
     return tweet
+
+
+def _make_tweepy_client(tweets, user_id=12345):
+    """构造 mock tweepy.Client，模拟 get_user / get_users_tweets 响应。"""
+    mock_client = MagicMock()
+    mock_user = MagicMock()
+    mock_user.id = user_id
+    mock_client.get_user.return_value = MagicMock(data=mock_user)
+    mock_client.get_users_tweets.return_value = MagicMock(data=tweets if tweets else None)
+    return mock_client
 
 
 def test_fetch_tweets_happy_path():
     """正常情况：返回格式化的推文字典列表。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", "AGI is near")
+    mock_tweet = _make_tweet(111, "AGI is near")
+    mock_client = _make_tweepy_client([mock_tweet])
 
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
+    result = fetch_tweets("sama", mock_client)
 
     assert len(result) == 1
     assert result[0]["id"] == "111"
     assert result[0]["text"] == "AGI is near"
     assert "sama/status/111" in result[0]["url"]
+    assert result[0]["created_at"] == "2026-03-22 09:00"
 
 
 def test_fetch_tweets_uses_configured_total():
-    """抓取条数应使用 FETCH_TWEETS_PER_USER 配置。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", "AGI is near")
+    """抓取条数应使用 FETCH_TWEETS_PER_USER 配置（上限 100）。"""
+    mock_tweet = _make_tweet(111, "AGI is near")
+    mock_client = _make_tweepy_client([mock_tweet])
 
-    with (
-        patch("pipeline.FETCH_TWEETS_PER_USER", 40),
-        patch("pipeline.Tweet", return_value=mock_tweet),
-    ):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
+    with patch("pipeline.FETCH_TWEETS_PER_USER", 40):
         fetch_tweets("sama", mock_client)
 
-    mock_client.get_user_tweets.assert_called_once_with("sama", total=40)
+    mock_client.get_users_tweets.assert_called_once()
+    _, kwargs = mock_client.get_users_tweets.call_args
+    assert kwargs["max_results"] == 40
+
+
+def test_fetch_tweets_calls_api_params():
+    """应传递正确的 tweet_fields 和 exclude 参数，以便 API 过滤转推和回复。"""
+    mock_tweet = _make_tweet(111, "hello")
+    mock_client = _make_tweepy_client([mock_tweet])
+
+    fetch_tweets("sama", mock_client)
+
+    mock_client.get_users_tweets.assert_called_once()
+    _, kwargs = mock_client.get_users_tweets.call_args
+    assert "created_at" in kwargs.get("tweet_fields", [])
+    assert "retweets" in kwargs.get("exclude", [])
+    assert "replies" in kwargs.get("exclude", [])
 
 
 def test_fetch_tweets_user_not_found():
-    """响应为空时返回空列表，不抛出异常。"""
+    """get_user 返回空数据时，返回空列表，不抛出异常。"""
     mock_client = MagicMock()
-    mock_client.get_user_tweets.return_value = None
+    mock_client.get_user.return_value = MagicMock(data=None)
 
     result = fetch_tweets("nonexistent_user", mock_client)
 
@@ -365,9 +358,8 @@ def test_fetch_tweets_user_not_found():
 
 
 def test_fetch_tweets_no_tweets():
-    """data 列表为空时返回空列表。"""
-    mock_client = MagicMock()
-    mock_client.get_user_tweets.return_value = {"data": []}
+    """get_users_tweets 返回空数据时，返回空列表。"""
+    mock_client = _make_tweepy_client([])
 
     result = fetch_tweets("sama", mock_client)
 
@@ -377,85 +369,22 @@ def test_fetch_tweets_no_tweets():
 def test_fetch_tweets_exception():
     """任何 API 异常都返回空列表，不向上抛出。"""
     mock_client = MagicMock()
-    mock_client.get_user_tweets.side_effect = Exception("network error")
+    mock_client.get_user.side_effect = Exception("network error")
 
     result = fetch_tweets("sama", mock_client)
 
     assert result == []
 
 
-def test_fetch_tweets_skip_retweets():
-    """以 'RT @' 开头的推文应被过滤。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", "RT @someone: some text")
+def test_fetch_tweets_no_created_at():
+    """created_at 为 None 时，created_at 字段应为空字符串。"""
+    mock_tweet = _make_tweet(111, "hello", created_at=None)
+    mock_client = _make_tweepy_client([mock_tweet])
 
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
-
-    assert result == []
-
-
-def test_fetch_tweets_skip_replies():
-    """有 in_reply_to_status_id_str 的推文（回复）应被过滤。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", "This is a reply", in_reply_to_status_id_str="999")
-
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
-
-    assert result == []
-
-
-def test_fetch_tweets_full_text_is_list():
-    """tweeterpy 返回 full_text 为列表时，应取第一个元素正常处理。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", ["AGI is near", "quoted tweet text"])
-
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
+    result = fetch_tweets("sama", mock_client)
 
     assert len(result) == 1
-    assert result[0]["text"] == "AGI is near"
-
-
-def test_fetch_tweets_full_text_list_is_retweet():
-    """full_text 为列表且第一个元素是转推时，应被过滤。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", ["RT @someone: original", "original"])
-
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
-
-    assert result == []
-
-
-def test_fetch_tweets_in_reply_to_is_list():
-    """in_reply_to_status_id_str 为列表时，应跳过该回复推文。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item("111", "This is a reply", in_reply_to_status_id_str=["999"])
-
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
-
-    assert result == []
-
-
-
-def test_fetch_tweets_skip_none_tweet_id():
-    """rest_id 和 id_str 均为 None 时，该推文应被跳过，不加入结果。"""
-    mock_client = MagicMock()
-    mock_tweet = _make_tweet_item(None, "AGI is near")
-
-    with patch("pipeline.Tweet", return_value=mock_tweet):
-        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
-        result = fetch_tweets("sama", mock_client)
-
-    assert result == []
+    assert result[0]["created_at"] == ""
 
 
 # ---------------------------------------------------------------------------
@@ -514,8 +443,7 @@ def _make_main_mocks(
     ids_file = tmp_path / "processed_ids.json"
     ids_file.write_text(json.dumps({"ids": processed_ids_content}))
 
-    mock_twitter = MagicMock()
-    mock_twitter.get_user_tweets.return_value = {"data": [MagicMock() for _ in tweet_items]}
+    mock_twitter = _make_tweepy_client(tweet_items)
 
     return people_file, ids_file, mock_twitter
 
@@ -531,11 +459,9 @@ def test_main_first_run_processes_old_tweets(tmp_path):
         }]
     }
 
-    # Tweet created well outside the lookback window
-    old_date = (date.today() - timedelta(days=LOOKBACK_DAYS + 10)).strftime(
-        _TWITTER_DATE_FMT
-    )
-    mock_tweet = _make_tweet_item("999", "Old but valid tweet", created_at=old_date)
+    # Tweet created well outside the lookback window (fixed far-past date)
+    old_dt = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    mock_tweet = _make_tweet(999, "Old but valid tweet", created_at=old_dt)
 
     people_file, ids_file, mock_twitter = _make_main_mocks(
         tmp_path,
@@ -546,17 +472,25 @@ def test_main_first_run_processes_old_tweets(tmp_path):
     docs_dir = tmp_path / "docs"
     archive_dir = docs_dir / "archive"
 
+    _TWITTER_CREDS = {
+        "GITHUB_TOKEN": "fake-token",
+        "TWITTER_API_KEY": "key",
+        "TWITTER_API_SECRET": "secret",
+        "TWITTER_ACCESS_TOKEN": "token",
+        "TWITTER_ACCESS_SECRET": "tokensecret",
+    }
+
     with (
-        patch("pipeline.Tweet", return_value=mock_tweet),
         patch("pipeline.PEOPLE_FILE", people_file),
         patch("pipeline.PROCESSED_IDS_FILE", ids_file),
         patch("pipeline.DOCS_DIR", docs_dir),
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
-        patch("pipeline.TweeterPy", return_value=mock_twitter),
+        patch("pipeline.tweepy") as mock_tweepy,
         patch("pipeline._do_translate", AsyncMock(return_value="TITLE: 标题\nSUMMARY: 摘要")),
-        patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}),
+        patch.dict(os.environ, _TWITTER_CREDS),
     ):
+        mock_tweepy.Client.return_value = mock_twitter
         main()
 
     # processed_ids should now contain the old tweet's ID
@@ -575,10 +509,8 @@ def test_main_subsequent_run_skips_old_tweets(tmp_path):
         }]
     }
 
-    old_date = (date.today() - timedelta(days=LOOKBACK_DAYS + 10)).strftime(
-        _TWITTER_DATE_FMT
-    )
-    mock_tweet = _make_tweet_item("888", "Old tweet on subsequent run", created_at=old_date)
+    old_dt = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    mock_tweet = _make_tweet(888, "Old tweet on subsequent run", created_at=old_dt)
 
     people_file, ids_file, mock_twitter = _make_main_mocks(
         tmp_path,
@@ -589,17 +521,25 @@ def test_main_subsequent_run_skips_old_tweets(tmp_path):
     docs_dir = tmp_path / "docs"
     archive_dir = docs_dir / "archive"
 
+    _TWITTER_CREDS = {
+        "GITHUB_TOKEN": "fake-token",
+        "TWITTER_API_KEY": "key",
+        "TWITTER_API_SECRET": "secret",
+        "TWITTER_ACCESS_TOKEN": "token",
+        "TWITTER_ACCESS_SECRET": "tokensecret",
+    }
+
     with (
-        patch("pipeline.Tweet", return_value=mock_tweet),
         patch("pipeline.PEOPLE_FILE", people_file),
         patch("pipeline.PROCESSED_IDS_FILE", ids_file),
         patch("pipeline.DOCS_DIR", docs_dir),
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
-        patch("pipeline.TweeterPy", return_value=mock_twitter),
+        patch("pipeline.tweepy") as mock_tweepy,
         patch("pipeline._do_translate", AsyncMock(return_value="TITLE: 标题\nSUMMARY: 摘要")),
-        patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}),
+        patch.dict(os.environ, _TWITTER_CREDS),
     ):
+        mock_tweepy.Client.return_value = mock_twitter
         main()
 
     # The old tweet should NOT have been added to processed_ids
@@ -608,11 +548,18 @@ def test_main_subsequent_run_skips_old_tweets(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# main — TWITTER_AUTH_TOKEN 认证行为
+# main — Twitter API 认证行为
 # ---------------------------------------------------------------------------
 
-def test_main_calls_generate_session_with_auth_token(tmp_path):
-    """设置 TWITTER_AUTH_TOKEN 时，main() 应调用 generate_session(auth_token=...)。"""
+def test_main_missing_twitter_credentials(tmp_path):
+    """缺少 Twitter API 认证信息时抛出 ValueError。"""
+    with patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}, clear=True):
+        with pytest.raises(ValueError, match="TWITTER_API_KEY"):
+            main()
+
+
+def test_main_creates_tweepy_client_with_credentials(tmp_path):
+    """main() 应使用四个 OAuth 凭据初始化 tweepy.Client。"""
     people_yml = {
         "people": [{
             "id": "test_user",
@@ -626,50 +573,17 @@ def test_main_calls_generate_session_with_auth_token(tmp_path):
     ids_file = tmp_path / "processed_ids.json"
     ids_file.write_text(json.dumps({"ids": []}))
 
-    mock_twitter = MagicMock()
-    mock_twitter.get_user_tweets.return_value = {"data": []}
-
+    mock_twitter = _make_tweepy_client([])
     docs_dir = tmp_path / "docs"
     archive_dir = docs_dir / "archive"
 
-    with (
-        patch("pipeline.PEOPLE_FILE", people_file),
-        patch("pipeline.PROCESSED_IDS_FILE", ids_file),
-        patch("pipeline.DOCS_DIR", docs_dir),
-        patch("pipeline.ARCHIVE_DIR", archive_dir),
-        patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
-        patch("pipeline.TweeterPy", return_value=mock_twitter),
-        patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token", "TWITTER_AUTH_TOKEN": "my-secret-token"}),
-    ):
-        main()
-
-    mock_twitter.generate_session.assert_called_once_with(auth_token="my-secret-token")
-
-
-def test_main_no_auth_token_skips_generate_session(tmp_path):
-    """未设置 TWITTER_AUTH_TOKEN 时，main() 不应调用 generate_session。"""
-    people_yml = {
-        "people": [{
-            "id": "test_user",
-            "name": "Test User",
-            "twitter_handle": "testuser",
-            "sources": [{"type": "twitter", "enabled": True}],
-        }]
+    creds = {
+        "GITHUB_TOKEN": "fake-token",
+        "TWITTER_API_KEY": "my-api-key",
+        "TWITTER_API_SECRET": "my-api-secret",
+        "TWITTER_ACCESS_TOKEN": "my-access-token",
+        "TWITTER_ACCESS_SECRET": "my-access-secret",
     }
-    people_file = tmp_path / "people.yml"
-    people_file.write_text(yaml.dump(people_yml), encoding="utf-8")
-    ids_file = tmp_path / "processed_ids.json"
-    ids_file.write_text(json.dumps({"ids": []}))
-
-    mock_twitter = MagicMock()
-    mock_twitter.get_user_tweets.return_value = {"data": []}
-
-    docs_dir = tmp_path / "docs"
-    archive_dir = docs_dir / "archive"
-
-    # Remove TWITTER_AUTH_TOKEN from env entirely
-    env_without_token = {k: v for k, v in os.environ.items() if k != "TWITTER_AUTH_TOKEN"}
-    env_without_token["GITHUB_TOKEN"] = "fake-token"
 
     with (
         patch("pipeline.PEOPLE_FILE", people_file),
@@ -677,9 +591,15 @@ def test_main_no_auth_token_skips_generate_session(tmp_path):
         patch("pipeline.DOCS_DIR", docs_dir),
         patch("pipeline.ARCHIVE_DIR", archive_dir),
         patch("pipeline.TEMPLATES_DIR", TEMPLATES_DIR),
-        patch("pipeline.TweeterPy", return_value=mock_twitter),
-        patch.dict(os.environ, env_without_token, clear=True),
+        patch("pipeline.tweepy") as mock_tweepy,
+        patch.dict(os.environ, creds),
     ):
+        mock_tweepy.Client.return_value = mock_twitter
         main()
 
-    mock_twitter.generate_session.assert_not_called()
+    mock_tweepy.Client.assert_called_once_with(
+        consumer_key="my-api-key",
+        consumer_secret="my-api-secret",
+        access_token="my-access-token",
+        access_token_secret="my-access-secret",
+    )

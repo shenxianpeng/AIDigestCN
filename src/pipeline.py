@@ -5,7 +5,7 @@ AI 领袖动态 — 每日自动抓取、翻译、发布到 GitHub Pages
   people.yml
       │
       ▼
-  fetch_tweets()      ← TweeterPy (无需 Bearer Token，使用 Guest Session)
+  fetch_tweets()      ← Tweepy (Twitter API v2，OAuth 1.0a)
       │ new tweets only (去重: processed_ids.json + LOOKBACK_DAYS 窗口)
       ▼
   translate()         ← GitHub Copilot 模型 (TITLE: / SUMMARY: 格式)
@@ -28,24 +28,14 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from copilot import CopilotClient, SubprocessConfig, PermissionHandler
+import tweepy
 import yaml
 from jinja2 import Environment, FileSystemLoader
-from tweeterpy import TweeterPy
-from tweeterpy.util import Tweet
 
-# Configure logging AFTER TweeterPy imports.
-# TweeterPy calls logging.config.dictConfig() at import time, which installs
-# handlers on both the root logger and the "__main__" logger.  Without the fix
-# below, every pipeline log line appears twice (once from the "__main__" handler
-# and once via propagation to the root handler).
 logging.basicConfig(
-    force=True,
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] :: %(message)s",
 )
-# Remove the extra handlers TweeterPy attached to the "__main__" named logger so
-# that messages are only emitted once (through the root handler configured above).
-logging.getLogger("__main__").handlers.clear()
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).parent.parent
@@ -174,71 +164,44 @@ def save_processed_ids(ids: set[str], path: Path = PROCESSED_IDS_FILE) -> None:
 # 抓取
 # ---------------------------------------------------------------------------
 
-def _parse_twitter_date(date_str: str) -> str:
-    """将 Twitter 时间格式（'Mon Mar 22 09:00:00 +0000 2026'）转换为 'YYYY-MM-DD HH:MM'。"""
-    try:
-        dt = datetime.strptime(date_str, "%a %b %d %H:%M:%S %z %Y")
-        return dt.strftime("%Y-%m-%d %H:%M")
-    except (ValueError, TypeError):
-        return ""
-
-
-def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
+def fetch_tweets(handle: str, client: tweepy.Client) -> list[dict]:
     """
-    抓取指定 Twitter 用户的最近推文（排除转推和回复）。
+    抓取指定 Twitter 用户的最近推文（通过 Twitter API v2，排除转推和回复）。
     任何错误都返回空列表，不抛出异常（单人失败不影响整体流程）。
 
     返回格式：[{"id": str, "text": str, "created_at": str, "url": str}]
     """
     try:
-        response = client.get_user_tweets(handle, total=FETCH_TWEETS_PER_USER)
-        if not response or not response.get("data"):
-            logger.warning(f"Twitter 用户未找到或无推文：@{handle}")
+        user_response = client.get_user(username=handle)
+        if not user_response or not user_response.data:
+            logger.warning(f"Twitter 用户未找到：@{handle}")
             return []
 
-        raw_count = len(response["data"])
+        user_id = user_response.data.id
+        max_results = min(FETCH_TWEETS_PER_USER, 100)
+        response = client.get_users_tweets(
+            user_id,
+            max_results=max_results,
+            tweet_fields=["created_at", "text"],
+            exclude=["retweets", "replies"],
+        )
+
+        if not response or not response.data:
+            logger.warning(f"@{handle} 无可用推文")
+            return []
+
         results = []
-        skipped_no_text = skipped_no_id = skipped_rt = skipped_reply = 0
-        for item in response["data"]:
-            tweet = Tweet(item)
-            # tweeterpy's find_nested_key() can return a list when a tweet
-            # contains nested tweet data (e.g. quoted tweets).  Normalise to
-            # a plain string by taking the first element so that downstream
-            # str operations like .startswith() don't raise TypeError.
-            full_text = tweet.full_text
-            if isinstance(full_text, list):
-                full_text = full_text[0] if full_text else None
-
-            if not full_text:
-                skipped_no_text += 1
-                continue
-            # 排除转推
-            if full_text.startswith("RT @"):
-                skipped_rt += 1
-                continue
-            # 排除回复 — in_reply_to_status_id_str may also be a list
-            reply_id = tweet.in_reply_to_status_id_str
-            if isinstance(reply_id, list):
-                reply_id = reply_id[0] if reply_id else None
-            if reply_id:
-                skipped_reply += 1
-                continue
-
-            tweet_id = tweet.rest_id or tweet.id_str
-            if not tweet_id:
-                skipped_no_id += 1
-                continue
+        for tweet in response.data:
+            tweet_id = str(tweet.id)
+            created_at = tweet.created_at.strftime("%Y-%m-%d %H:%M") if tweet.created_at else ""
             results.append({
                 "id": tweet_id,
-                "text": full_text,
-                "created_at": _parse_twitter_date(tweet.created_at),
+                "text": tweet.text,
+                "created_at": created_at,
                 "url": f"https://x.com/{handle}/status/{tweet_id}",
             })
 
-        logger.info(
-            f"  @{handle}: 原始={raw_count}, 无文本={skipped_no_text}, 无ID={skipped_no_id}, "
-            f"转推={skipped_rt}, 回复={skipped_reply}, 有效={len(results)}"
-        )
+        logger.info(f"  @{handle}: 获取={len(results)} 条推文")
         return results
     except Exception as e:
         logger.warning(f"@{handle} 抓取失败（已跳过）：{e}")
@@ -367,32 +330,24 @@ def main() -> None:
     if not github_token:
         raise ValueError("GITHUB_TOKEN 环境变量未设置")
 
-    # log_level="CRITICAL" suppresses TweeterPy's INFO/WARNING/ERROR noise
-    # (including the harmless "[Errno 2] No such file or directory: '/tmp/tweeterpy_api.json'"
-    # warning that appears on every clean CI run, and the rate-limit ERROR messages
-    # that TweeterPy logs internally when it hits HTTP 429 — those would otherwise
-    # appear as ##[error] annotations in GitHub Actions even though the pipeline
-    # handles them gracefully).  TweeterPy's constructor also calls set_log_level()
-    # which resets ALL named loggers; restore our level immediately afterwards so
-    # pipeline INFO messages remain visible.
-    twitter_client = TweeterPy(log_level="CRITICAL")
-    logger.setLevel(logging.INFO)
+    api_key = os.environ.get("TWITTER_API_KEY")
+    api_secret = os.environ.get("TWITTER_API_SECRET")
+    access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
+    access_secret = os.environ.get("TWITTER_ACCESS_SECRET")
 
-    # Authenticated sessions have access to the full current timeline.
-    # Guest sessions are limited to historical/cached data (~ Nov 2025 cutoff)
-    # which causes the pipeline to find 0 new tweets with a short lookback window.
-    # Set TWITTER_AUTH_TOKEN (GitHub Secret) to an auth_token cookie value from a
-    # logged-in Twitter/X session to unlock the real-time timeline.
-    twitter_auth_token = os.environ.get("TWITTER_AUTH_TOKEN")
-    if twitter_auth_token:
-        twitter_client.generate_session(auth_token=twitter_auth_token)
-        logger.info("Twitter 会话：已认证（TWITTER_AUTH_TOKEN 已配置）")
-    else:
-        logger.warning(
-            "TWITTER_AUTH_TOKEN 未设置，使用 Guest Session。"
-            " Guest Session 仅能访问约 2025-11 以前的历史推文，无法获取当前内容。"
-            " 请在 GitHub Secrets 中配置 TWITTER_AUTH_TOKEN 以获取最新推文。"
+    if not all([api_key, api_secret, access_token, access_secret]):
+        raise ValueError(
+            "Twitter API 认证信息不完整，请在 GitHub Secrets 中配置：\n"
+            "TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET"
         )
+
+    twitter_client = tweepy.Client(
+        consumer_key=api_key,
+        consumer_secret=api_secret,
+        access_token=access_token,
+        access_token_secret=access_secret,
+    )
+    logger.info("Twitter 客户端已初始化（OAuth 1.0a）")
 
     people = load_config(PEOPLE_FILE)
     processed_ids = load_processed_ids(PROCESSED_IDS_FILE)
@@ -428,7 +383,7 @@ def main() -> None:
             if not is_first_run and not _is_within_lookback(tweet["created_at"]):
                 logger.info(
                     f"  跳过推文 {tweet['id']}（日期 {tweet['created_at']} 超出 "
-                    f"{LOOKBACK_DAYS} 天窗口）— 需配置 TWITTER_AUTH_TOKEN 以获取最新推文"
+                    f"{LOOKBACK_DAYS} 天窗口）"
                 )
                 total_skipped_lookback += 1
                 continue
