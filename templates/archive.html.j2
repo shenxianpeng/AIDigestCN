@@ -1,57 +1,99 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 领袖动态 · 历史存档</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@700,600,500,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:           #FAF9F6;
-      --surface:      #ffffff;
-      --border:       #E8E5DF;
-      --text:         #1C1917;
-      --text-2:       #78716C;
-      --text-3:       #A8A29E;
-      --accent:       #B8730A;
-      --accent-bg:    #FEF3E2;
-      --shadow:       0 1px 3px rgba(28,25,23,.06), 0 1px 2px rgba(28,25,23,.04);
-      --shadow-hover: 0 4px 16px rgba(28,25,23,.08), 0 2px 4px rgba(28,25,23,.04);
+      --bg:           #FFFFFF;
+      --bg-2:         #F8F9FA;
+      --surface:      #FFFFFF;
+      --surface-2:    #F3F4F6;
+      --border:       #E5E7EB;
+      --border-2:     #D1D5DB;
+      --text:         #111827;
+      --text-2:       #6B7280;
+      --text-3:       #9CA3AF;
+      --accent:       #15803D;
+      --accent-hover: #166534;
+      --accent-bg:    #DCFCE7;
+      --accent-light: #F0FDF4;
+      --shadow-sm:    0 1px 3px rgba(17,24,39,.06), 0 1px 2px rgba(17,24,39,.04);
+      --shadow-md:    0 4px 20px rgba(17,24,39,.09), 0 2px 6px rgba(17,24,39,.05);
+      --shadow-hover: 0 8px 30px rgba(17,24,39,.12), 0 3px 8px rgba(17,24,39,.07);
+      --radius-sm:    4px;
+      --radius-md:    8px;
+      --radius-lg:    12px;
+      --radius-full:  9999px;
+    }
+
+    [data-theme="dark"] {
+      --bg:           #0A0F0D;
+      --bg-2:         #111810;
+      --surface:      #141A12;
+      --surface-2:    #1C2419;
+      --border:       #2A3325;
+      --border-2:     #3A4A33;
+      --text:         #D1FAE5;
+      --text-2:       #86EFAC;
+      --text-3:       #4ADE80;
+      --accent:       #22C55E;
+      --accent-hover: #16A34A;
+      --accent-bg:    #14532D;
+      --accent-light: #052E16;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+      --shadow-md:    0 4px 20px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25);
+      --shadow-hover: 0 8px 30px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.3);
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-                   "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      transition: background .3s ease, color .3s ease;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto;
       padding: 48px 20px 80px;
     }
 
-    header { margin-bottom: 36px; }
+    /* ── Header ── */
+    header {
+      margin-bottom: 40px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-text { flex: 1; }
     header h1 {
-      font-family: 'Fraunces', 'STSong', 'Songti SC', serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-family: 'Clash Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(32px, 5vw, 48px);
       font-weight: 700;
-      letter-spacing: -.025em;
-      line-height: 1.1;
+      letter-spacing: -.02em;
+      line-height: 1.05;
+      color: var(--text);
     }
     .subtitle {
-      margin-top: 6px;
-      font-size: 13px;
+      margin-top: 8px;
       font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+      font-size: 12px;
       font-variant-numeric: tabular-nums;
       color: var(--text-3);
+      letter-spacing: .03em;
     }
     .subtitle a {
       color: var(--accent);
@@ -59,49 +101,87 @@
     }
     .subtitle a:hover { text-decoration: underline; }
 
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      flex-shrink: 0;
+      margin-top: 6px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+      font-family: inherit;
+    }
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── Archive list ── */
     .archive-list {
       list-style: none;
     }
-
     .archive-list li {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: var(--radius-lg);
       margin-bottom: 8px;
-      box-shadow: var(--shadow);
-      transition: box-shadow .18s ease;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
     }
-    .archive-list li:hover { box-shadow: var(--shadow-hover); }
-
+    .archive-list li:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-1px);
+      border-color: var(--border-2);
+    }
     .archive-list a {
       display: flex;
       align-items: center;
-      min-height: 44px;
-      padding: 12px 18px;
-      font-size: 14px;
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
+      justify-content: space-between;
+      min-height: 48px;
+      padding: 12px 20px;
       font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+      font-size: 14px;
       font-variant-numeric: tabular-nums;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: .02em;
     }
-    .archive-list a:hover { text-decoration: underline; }
+    .archive-list a:hover { color: var(--accent); }
+    .archive-list .arrow {
+      color: var(--text-3);
+      font-size: 12px;
+      transition: color .15s, transform .15s;
+    }
+    .archive-list li:hover .arrow {
+      color: var(--accent);
+      transform: translateX(2px);
+    }
 
+    /* ── Empty state ── */
     .empty {
       text-align: center;
       padding: 80px 20px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: var(--radius-lg);
       font-size: 14px;
       color: var(--text-3);
     }
 
+    /* ── Footer ── */
     footer {
-      margin-top: 40px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
       text-align: center;
-      font-size: 12px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
       color: var(--text-3);
+      letter-spacing: .03em;
     }
     footer a {
       display: inline-flex;
@@ -110,11 +190,13 @@
       padding: 0 8px;
       color: var(--text-3);
       text-decoration: none;
+      transition: color .15s;
     }
-    footer a:hover { color: var(--text-2); }
+    footer a:hover { color: var(--accent); }
 
-    @media (max-width: 560px) {
+    @media (max-width: 640px) {
       .container { padding: 28px 16px 60px; }
+      header h1 { font-size: 28px; }
     }
   </style>
 </head>
@@ -122,14 +204,22 @@
 <div class="container">
 
   <header>
-    <h1>历史存档</h1>
-    <p class="subtitle">共 {{ dates|length }} 期 · <a href="../">返回首页</a></p>
+    <div class="header-text">
+      <h1>历史存档</h1>
+      <p class="subtitle">共 {{ dates|length }} 期 · <a href="../">返回首页</a></p>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙 深色</button>
   </header>
 
   {% if dates %}
     <ul class="archive-list">
       {% for d in dates %}
-      <li><a href="{{ d }}.html">{{ d }}</a></li>
+      <li>
+        <a href="{{ d }}.html">
+          <span>{{ d }}</span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
       {% endfor %}
     </ul>
   {% else %}
@@ -141,5 +231,27 @@
   </footer>
 
 </div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    const btn = document.querySelector('.theme-toggle');
+    btn.textContent = isDark ? '🌙 深色' : '☀️ 浅色';
+    try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch(e) {}
+  }
+  (function() {
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.addEventListener('DOMContentLoaded', function() {
+          const btn = document.querySelector('.theme-toggle');
+          if (btn) btn.textContent = '☀️ 浅色';
+        });
+      }
+    } catch(e) {}
+  })();
+</script>
 </body>
 </html>

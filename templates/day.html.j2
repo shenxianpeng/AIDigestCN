@@ -1,136 +1,223 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 领袖动态 · {{ date }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@700,600,500,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:           #FAF9F6;
-      --surface:      #ffffff;
-      --border:       #E8E5DF;
-      --text:         #1C1917;
-      --text-2:       #78716C;
-      --text-3:       #A8A29E;
-      --accent:       #B8730A;
-      --accent-bg:    #FEF3E2;
-      --shadow:       0 1px 3px rgba(28,25,23,.06), 0 1px 2px rgba(28,25,23,.04);
-      --shadow-hover: 0 4px 16px rgba(28,25,23,.08), 0 2px 4px rgba(28,25,23,.04);
+      --bg:           #FFFFFF;
+      --bg-2:         #F8F9FA;
+      --surface:      #FFFFFF;
+      --surface-2:    #F3F4F6;
+      --border:       #E5E7EB;
+      --border-2:     #D1D5DB;
+      --text:         #111827;
+      --text-2:       #6B7280;
+      --text-3:       #9CA3AF;
+      --accent:       #15803D;
+      --accent-hover: #166534;
+      --accent-bg:    #DCFCE7;
+      --accent-light: #F0FDF4;
+      --shadow-sm:    0 1px 3px rgba(17,24,39,.06), 0 1px 2px rgba(17,24,39,.04);
+      --shadow-md:    0 4px 20px rgba(17,24,39,.09), 0 2px 6px rgba(17,24,39,.05);
+      --shadow-hover: 0 8px 30px rgba(17,24,39,.12), 0 3px 8px rgba(17,24,39,.07);
+      --radius-sm:    4px;
+      --radius-md:    8px;
+      --radius-lg:    12px;
+      --radius-full:  9999px;
+    }
+
+    [data-theme="dark"] {
+      --bg:           #0A0F0D;
+      --bg-2:         #111810;
+      --surface:      #141A12;
+      --surface-2:    #1C2419;
+      --border:       #2A3325;
+      --border-2:     #3A4A33;
+      --text:         #D1FAE5;
+      --text-2:       #86EFAC;
+      --text-3:       #4ADE80;
+      --accent:       #22C55E;
+      --accent-hover: #16A34A;
+      --accent-bg:    #14532D;
+      --accent-light: #052E16;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+      --shadow-md:    0 4px 20px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25);
+      --shadow-hover: 0 8px 30px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.3);
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-                   "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      transition: background .3s ease, color .3s ease;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto;
       padding: 48px 20px 80px;
     }
 
     /* ── Header ── */
-    header { margin-bottom: 36px; }
+    header {
+      margin-bottom: 40px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-text { flex: 1; }
     header h1 {
-      font-family: 'Fraunces', 'STSong', 'Songti SC', serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-family: 'Clash Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(32px, 5vw, 48px);
       font-weight: 700;
-      letter-spacing: -.025em;
-      line-height: 1.1;
+      letter-spacing: -.02em;
+      line-height: 1.05;
+      color: var(--text);
     }
     .dateline {
-      margin-top: 6px;
-      font-size: 13px;
+      margin-top: 8px;
+      font-size: 12px;
       font-family: 'Geist Mono', 'JetBrains Mono', monospace;
       font-variant-numeric: tabular-nums;
       color: var(--text-3);
+      letter-spacing: .03em;
+    }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      flex-shrink: 0;
+      margin-top: 6px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+      font-family: inherit;
+    }
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px 22px;
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
       margin-bottom: 12px;
-      box-shadow: var(--shadow);
-      transition: box-shadow .18s ease;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
     }
-    .card:hover { box-shadow: var(--shadow-hover); }
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-1px);
+      border-color: var(--border-2);
+    }
 
-    .card-meta {
+    /* ── Person identity ── */
+    .card-identity {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
     }
     .avatar {
-      width: 26px; height: 26px;
-      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
       background: var(--accent-bg);
       color: var(--accent);
-      font-size: 11px;
+      font-family: 'Clash Grotesk', sans-serif;
+      font-size: 16px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      letter-spacing: -.01em;
     }
-    .author {
-      font-size: 13px;
+    .identity-info { flex: 1; min-width: 0; }
+    .author-name {
+      font-family: 'Clash Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 15px;
       font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+      letter-spacing: -.01em;
     }
-    .time {
+    .author-meta {
       font-family: 'Geist Mono', 'JetBrains Mono', monospace;
       font-size: 11px;
       font-variant-numeric: tabular-nums;
       color: var(--text-3);
-      margin-left: auto;
+      margin-top: 2px;
+      letter-spacing: .02em;
     }
 
+    /* ── Card content ── */
     .card-title {
-      font-size: 15px;
+      font-family: 'Clash Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
       font-weight: 600;
-      line-height: 1.55;
-      margin-bottom: 8px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      color: var(--text);
+      letter-spacing: -.01em;
     }
     .card-summary {
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--text-2);
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text);
       margin-bottom: 14px;
     }
     .card-original {
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.65;
-      color: var(--text-3);
-      border-left: 2px solid var(--border);
+      color: var(--text-2);
+      border-left: 2px solid var(--accent);
       padding-left: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       font-style: italic;
+      opacity: .8;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     .card-link a {
       display: inline-flex;
       align-items: center;
-      min-height: 44px;
-      padding: 0 2px;
-      font-size: 12px;
-      font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+      height: 32px;
+      padding: 0 12px;
+      background: var(--accent-light);
       color: var(--accent);
+      border-radius: var(--radius-sm);
+      font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
       text-decoration: none;
-      letter-spacing: .02em;
+      letter-spacing: .03em;
+      transition: background .15s;
     }
-    .card-link a:hover { text-decoration: underline; }
+    .card-link a:hover { background: var(--accent-bg); }
 
     /* ── Empty state ── */
     .empty {
@@ -138,7 +225,7 @@
       padding: 64px 24px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: var(--radius-lg);
       color: var(--text-3);
     }
     .empty-icon {
@@ -147,36 +234,42 @@
       opacity: .5;
     }
     .empty-title {
-      font-size: 15px;
+      font-family: 'Clash Grotesk', sans-serif;
+      font-size: 16px;
       font-weight: 600;
       color: var(--text-2);
       margin-bottom: 6px;
     }
     .empty-sub {
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.7;
       margin-bottom: 20px;
     }
     .empty-action {
       display: inline-flex;
       align-items: center;
-      min-height: 36px;
-      padding: 0 16px;
+      height: 40px;
+      padding: 0 20px;
       background: var(--accent-bg);
       color: var(--accent);
-      border-radius: 6px;
-      font-size: 13px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
       font-weight: 600;
       text-decoration: none;
       transition: background .15s;
     }
-    .empty-action:hover { background: #fde8c0; }
+    .empty-action:hover { background: var(--accent); color: #fff; }
 
+    /* ── Footer ── */
     footer {
-      margin-top: 40px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
       text-align: center;
-      font-size: 12px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
       color: var(--text-3);
+      letter-spacing: .03em;
     }
     footer a {
       display: inline-flex;
@@ -185,12 +278,14 @@
       padding: 0 8px;
       color: var(--text-3);
       text-decoration: none;
+      transition: color .15s;
     }
-    footer a:hover { color: var(--text-2); }
+    footer a:hover { color: var(--accent); }
 
-    @media (max-width: 560px) {
+    @media (max-width: 640px) {
       .container { padding: 28px 16px 60px; }
       .card { padding: 16px 18px; }
+      header h1 { font-size: 28px; }
     }
   </style>
 </head>
@@ -198,17 +293,22 @@
 <div class="container">
 
   <header>
-    <h1>AI 领袖动态</h1>
-    <p class="dateline">{{ date }}{% if entries %} · {{ entries|length }} 条{% endif %}</p>
+    <div class="header-text">
+      <h1>AI 领袖动态</h1>
+      <p class="dateline">{{ date }}{% if entries %} · {{ entries|length }} 条{% endif %}</p>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙 深色</button>
   </header>
 
   {% if entries %}
     {% for entry in entries %}
     <article class="card">
-      <div class="card-meta">
+      <div class="card-identity">
         <div class="avatar">{{ entry.person_name[0] }}</div>
-        <span class="author">{{ entry.person_name }}</span>
-        <span class="time">{{ entry.created_at }}</span>
+        <div class="identity-info">
+          <div class="author-name">{{ entry.person_name }}</div>
+          <div class="author-meta">{{ entry.created_at }}</div>
+        </div>
       </div>
 
       {% if entry.title and entry.title not in ("（原文）", "（无标题）") %}
@@ -219,8 +319,10 @@
 
       <div class="card-original">{{ entry.original_text }}</div>
 
-      <div class="card-link">
-        <a href="{{ entry.tweet_url }}" target="_blank" rel="noopener">查看原推 ↗</a>
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="{{ entry.tweet_url }}" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
       </div>
     </article>
     {% endfor %}
@@ -238,5 +340,27 @@
   </footer>
 
 </div>
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    const btn = document.querySelector('.theme-toggle');
+    btn.textContent = isDark ? '🌙 深色' : '☀️ 浅色';
+    try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch(e) {}
+  }
+  (function() {
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.addEventListener('DOMContentLoaded', function() {
+          const btn = document.querySelector('.theme-toggle');
+          if (btn) btn.textContent = '☀️ 浅色';
+        });
+      }
+    } catch(e) {}
+  })();
+</script>
 </body>
 </html>
