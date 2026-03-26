@@ -50,20 +50,6 @@ people:
       - type: twitter
         enabled: true
 
-  - id: nan_yu
-    name: Nan Yu
-    twitter_handle: thenanyu
-    sources:
-      - type: twitter
-        enabled: true
-
-  - id: madhu_guru
-    name: Madhu Guru
-    twitter_handle: realmadhuguru
-    sources:
-      - type: twitter
-        enabled: true
-
   - id: amanda_askell
     name: Amanda Askell
     twitter_handle: AmandaAskell
@@ -74,20 +60,6 @@ people:
   - id: cat_wu
     name: Cat Wu
     twitter_handle: _catwu
-    sources:
-      - type: twitter
-        enabled: true
-
-  - id: thariq
-    name: Thariq
-    twitter_handle: trq212
-    sources:
-      - type: twitter
-        enabled: true
-
-  - id: google_labs
-    name: Google Labs
-    twitter_handle: GoogleLabs
     sources:
       - type: twitter
         enabled: true
@@ -120,13 +92,6 @@ people:
       - type: twitter
         enabled: true
 
-  - id: ryo_lu
-    name: Ryo Lu
-    twitter_handle: ryolu_
-    sources:
-      - type: twitter
-        enabled: true
-
   - id: garry_tan
     name: Garry Tan
     twitter_handle: garrytan
@@ -137,13 +102,6 @@ people:
   - id: matt_turck
     name: Matt Turck
     twitter_handle: mattturck
-    sources:
-      - type: twitter
-        enabled: true
-
-  - id: zara_zhang
-    name: Zara Zhang
-    twitter_handle: zarazhangrui
     sources:
       - type: twitter
         enabled: true
@@ -176,9 +134,3 @@ people:
       - type: twitter
         enabled: true
 
-  - id: claude_ai
-    name: Claude
-    twitter_handle: claudeai
-    sources:
-      - type: twitter
-        enabled: true
