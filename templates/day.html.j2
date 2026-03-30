@@ -366,6 +366,11 @@
 
       {% if entry.is_repost and entry.context_author %}
       <div class="card-repost-badge">↩ 转发自 @{{ entry.context_author }}</div>
+      {% if entry.context_translated %}
+      <div class="card-context">
+        <div class="context-body">{{ entry.context_translated }}</div>
+      </div>
+      {% endif %}
       {% endif %}
 
       {% if entry.context_text and not entry.is_repost %}
@@ -380,7 +385,7 @@
           {% endif %}
           {% endif %}
         </div>
-        <div class="context-body">{{ entry.context_text }}</div>
+        <div class="context-body">{{ entry.context_translated if entry.context_translated else entry.context_text }}</div>
       </div>
       {% endif %}
 

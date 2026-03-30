@@ -79,10 +79,12 @@ BATCH_PROMPT_TEMPLATE = """\
 [1]
 TITLE: 一句话核心观点（不超过 20 字）
 SUMMARY: 中文翻译（保留原意，如有引用请概括完整背景，不超过 150 字）
+CONTEXT: 被转发/引用原帖的直接中文翻译（仅当原文中含有转发或引用内容时填写，否则留空）
 
 [2]
 TITLE: ...
 SUMMARY: ...
+CONTEXT: ...
 
 推文原文：
 {tweets}"""
@@ -148,10 +150,11 @@ class TweetEntry:
     created_at: str
     title: str = ""
     summary: str = ""
-    context_text: str = ""    # 被引用/转发推文的内容
-    context_author: str = ""  # 被引用/转发推文的作者 handle
-    context_url: str = ""     # 被引用推文的链接
-    is_repost: bool = False   # True 表示纯转推（无评论）
+    context_text: str = ""        # 被引用/转发推文的内容（英文原文）
+    context_author: str = ""      # 被引用/转发推文的作者 handle
+    context_url: str = ""         # 被引用推文的链接
+    is_repost: bool = False       # True 表示纯转推（无评论）
+    context_translated: str = ""  # 被引用/转发推文的中文翻译
 
 
 # ---------------------------------------------------------------------------
@@ -345,6 +348,7 @@ def parse_llm_output(text: str, original: str) -> dict[str, str]:
     """
     title = ""
     summary = ""
+    context_translated = ""
 
     for line in text.strip().splitlines():
         stripped = line.strip()
@@ -352,14 +356,17 @@ def parse_llm_output(text: str, original: str) -> dict[str, str]:
             title = stripped[len("TITLE:"):].strip()
         elif stripped.startswith("SUMMARY:"):
             summary = stripped[len("SUMMARY:"):].strip()
+        elif stripped.startswith("CONTEXT:"):
+            context_translated = stripped[len("CONTEXT:"):].strip()
 
     if not title and not summary:
         logger.warning("LLM 输出格式不符，使用原文 fallback")
-        return {"title": "（原文）", "summary": original}
+        return {"title": "（原文）", "summary": original, "context_translated": ""}
 
     return {
         "title": title or "（无标题）",
         "summary": summary or original,
+        "context_translated": context_translated,
     }
 
 
@@ -595,6 +602,7 @@ def main() -> None:
                 context_author=tweet.get("context_author", ""),
                 context_url=tweet.get("context_url", ""),
                 is_repost=tweet.get("is_repost", False),
+                context_translated=translated.get("context_translated", ""),
             ))
             new_ids.add(tweet["id"])
 
