@@ -219,6 +219,53 @@
     }
     .card-link a:hover { background: var(--accent-bg); }
 
+    /* ── Context block (quoted / retweeted tweet) ── */
+    .card-context {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--border-2);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .context-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+    .context-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .context-author {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .context-author:hover { text-decoration: underline; }
+    .context-body {
+      color: var(--text-2);
+      font-style: italic;
+    }
+    .card-repost-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      letter-spacing: .02em;
+    }
+
     /* ── Empty state ── */
     .empty {
       text-align: center;
@@ -295,7 +342,7 @@
   <header>
     <div class="header-text">
       <h1>AI 领袖动态</h1>
-      <p class="dateline">2026-03-30 · 11 条</p>
+      <p class="dateline">2026-03-30 · 152 条</p>
     </div>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙 深色</button>
   </header>
@@ -307,21 +354,29 @@
         <div class="avatar">S</div>
         <div class="identity-info">
           <div class="author-name">Sam Altman</div>
-          <div class="author-meta">2026-03-30 15:34</div>
+          <div class="author-meta">2026-03-24 21:39</div>
         </div>
       </div>
 
       
-      <div class="card-title">这是一个很好的帖子</div>
+      <div class="card-title">OpenAI新非营利组织计划支出10亿美元</div>
       
 
-      <div class="card-summary">这是一条非常好的推文。</div>
+      <div class="card-summary">新成立的OpenAI非营利组织宣布将在第一年内支出10亿美元，由@JacobTref和@woj_zaremba领导。该计划有巨大的潜力，可以带来积极的影响。</div>
 
-      <div class="card-original">This is a very good post:</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @nanransohoff</div>
+      
+
+      
+
+      <div class="card-original">The new OpenAI nonprofit just announced that it aims to spend $1B in its *first year&#34; and will be led by two superb humans -- @JacobTref and @woj_zaremba. Simply put, this initiative has huge potential to do a whole lot of good. 
+
+https://t.co/xHEj9Rf8qT</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/sama/status/2038640963036626971" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/sama/status/2036558551825653810" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -331,23 +386,754 @@
         <div class="avatar">S</div>
         <div class="identity-info">
           <div class="author-name">Swyx</div>
-          <div class="author-meta">2026-03-30 06:52</div>
+          <div class="author-meta">2026-03-30 08:06</div>
         </div>
       </div>
 
       
-      <div class="card-title">我们时代最令人愉悦的人工智能</div>
+      <div class="card-title">《从零开始构建推理模型》全书章节上线</div>
       
 
-      <div class="card-summary">这些人工智能被搁置去做编码和企业软件服务。</div>
+      <div class="card-summary">所有章节的《从零开始构建推理模型》现已提前访问，书籍正在制作中，预计几个月内发布，包括全彩印刷和语法高亮。亚马逊上也已开启预订。</div>
 
-      <div class="card-original">the most delightful AIs of our time
+      
+      <div class="card-repost-badge">↩ 转发自 @rasbt</div>
+      
 
-shelved to do koding and enterprise saas</div>
+      
+
+      <div class="card-original">It’s done.
+
+All chapters of Build A Reasoning Model (From Scratch) are now available in early access.
+
+The book is currently in production and should be out in the next months, including full-color print and syntax highlighting.
+
+There’s also a preorder up on Amazon. https://t.co/ANaJHjpC2s</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/swyx/status/2038509566800118021" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/swyx/status/2038528316672757763" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-29 23:11</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新加坡AI工程师活动即将举行</div>
+      
+
+      <div class="card-summary">@aiDotEngineer将在新加坡举行活动，时间为5月15日至17日，期待这次有趣的经历。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @gabrielchua</div>
+      
+
+      
+
+      <div class="card-original">this is gonna be so fun
+
+@aiDotEngineer Singapore (15-17 May) https://t.co/oZq0y2TF6v</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2038393652171706839" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-29 20:22</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">大胆程度决定生活的回馈</div>
+      
+
+      <div class="card-summary">我有一个理论，生活会在你大胆的程度上与你相遇。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ashebytes</div>
+      
+
+      
+
+      <div class="card-original">I have a theory that life meets you at your level of audacity</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2038351162819371415" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-29 03:10</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">请求45分钟讨论时间</div>
+      
+
+      <div class="card-summary">@swyx，我可以有45分钟的时间吗？:P</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @badlogicgames</div>
+      
+
+      
+
+      <div class="card-original">yo, @swyx think i can have 45 minutes? :P https://t.co/mF3HyUCNoE</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2038091429420122424" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-28 18:23</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">寻找支持你工作的朋友</div>
+      
+
+      <div class="card-summary">找一些支持你工作的朋友，最好是职业生涯比你更进一步的人。真诚地培养这些关系，长期以来他们会在定性和定量上帮助你。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @TheNoahHein</div>
+      
+
+      
+
+      <div class="card-original">Get some friends who support the work you do, ideally people a bit further along in their careers than you are.
+
+Nurture those relationships genuinely and over a long period of time. They will help you in ways that are both qualitative and quantitative.
+
+I don’t have a huge</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037958695703990327" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-28 02:40</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">再次志愿教学，感谢演讲者</div>
+      
+
+      <div class="card-summary">@mabb0tt和我再次志愿教学，探索许多新的前沿领域。感谢@karpathy等演讲者为下一代投资。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @AnjneyMidha</div>
+      
+
+      
+
+      <div class="card-original">so @mabb0tt and I are once again volunteering to teach https://t.co/17s6lIexa2 
+
+there are so many new frontiers to be pioneered 
+
+thank you to our speakers like @karpathy @bhorowitz @brendaniribe @DavidBaszucki @LiamFedus @ekindogus @sama for investing in the next generation https://t.co/4OA7pUNCBt</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037721526297120873" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-27 21:38</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">链接分享</div>
+      
+
+      <div class="card-summary">https://t.co/4ZHibygJM2</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @TheNoahHein</div>
+      
+
+      
+
+      <div class="card-original">https://t.co/4ZHibygJM2</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037645545175666772" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-27 21:17</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI工程师伦敦主题演讲的想法</div>
+      
+
+      <div class="card-summary">大家觉得这个主题适合我在伦敦的AI工程师主题演讲吗？（我仍然无法相信有人会让我做主题演讲者）。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @badlogicgames</div>
+      
+
+      
+
+      <div class="card-original">chat, how do we feel about this for my AI Engineer London keynote?
+
+(still can&#39;t believe anyone would make me a keynoter). https://t.co/oNtnhVpqzz</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037640256930132097" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-27 18:02</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">链接分享</div>
+      
+
+      <div class="card-summary">https://t.co/5P5u85Q5Yk</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @lavanyaai</div>
+      
+
+      
+
+      <div class="card-original">https://t.co/5P5u85Q5Yk</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037591162689896740" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-26 23:26</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新多模态模型Uni-1发布</div>
+      
+
+      <div class="card-summary">我们兴奋地介绍Uni-1，这是一个新的多模态模型，旨在统一理解与生成。大约15名研究人员正在与nano banana和GPT图像进行深入对比。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @shenbokui</div>
+      
+
+      
+
+      <div class="card-original">Excited to introduce Uni-1, our new multimodal model that *unifies* understanding and generation.
+
+TLDR: a team of ~15 researchers is going pound-for-pound with nano banana and gpt image 🧵 https://t.co/2NHSpT6Hye</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037310228648391093" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-26 21:44</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">GitHub社交俱乐部即将来临</div>
+      
+
+      <div class="card-summary">GitHub社交俱乐部将于4月7日在伦敦举行，活动主要面向开发者、维护者、创作者和创始人，注重交流与分享项目，而非演讲和推介。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @KevinCrosby1</div>
+      
+
+      
+
+      <div class="card-original">GitHub Social Club is coming to London on April 7 before AI Engineer Europe (@swyx @aidotengineer)
+
+This is low-key gather for developers, maintainers, builders and founders. It’s less about talks and pitches, and more about good conversations, sharing your projects, and</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037284568877949287" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-26 03:55</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Claude Cowork + Computer Use发布</div>
+      
+
+      <div class="card-summary">Claude Cowork + Computer Use是有史以来最大的AnthropicAI发布，祝贺他们的成功！相关数据可查看链接。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @latentspacepod</div>
+      
+
+      
+
+      <div class="card-original">[AINews 25 March 2026]
+
+Claude Cowork + Computer Use (@Vercept_ai) is the biggest @AnthropicAI launch of all time.
+
+Congrats!
+
+data below: https://t.co/PFoso1jOuF</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2037015684190974043" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-26 01:20</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Phil Hedayatnia将在新加坡演讲</div>
+      
+
+      <div class="card-summary">我们非常兴奋地邀请到Phil Hedayatnia在新加坡的aiDotEngineer活动上发言，他是AirfoilStudio的负责人，该设计工作室与多家知名AI公司合作。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @SherryYanJiang</div>
+      
+
+      
+
+      <div class="card-original">incredibly excited to have @PhilHedayatnia speak at @aiDotEngineer singapore on the design track
+
+phil runs @AirfoilStudio - a 40-person design studio that&#39;s worked with some of the biggest names in ai - @ExaAILabs , @cerebras , @reductoai and 1/5 of Forbes&#39; Next Billion Dollar https://t.co/Rwib81ZcGQ</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036976461421437231" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-26 00:11</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">生活更新：加入Google DeepMind</div>
+      
+
+      <div class="card-summary">我已搬到旧金山并加入Google DeepMind，期待与团队中的其他成员一起工作，感到非常兴奋。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ivanleomk</div>
+      
+
+      
+
+      <div class="card-original">Life update I’ve moved to San Francisco and joined @GoogleDeepMind. 
+
+Excited to work alongside @OfficialLoganK  @thorwebdev @DynamicWebPaige @_philschmid @patloeber @ammaar @vadiamit @osanseviero @harrisonfjobe @goodside @alihcevik @matthewridenour https://t.co/HBiaH3yKii</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036959134340571138" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-25 18:58</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Daria Sobol将在新加坡演讲</div>
+      
+
+      <div class="card-summary">我们很高兴邀请到Daria Sobol，她在新加坡的aiDotEngineer活动上发言，设计了混合专家（MoE）模型，帮助模型如Qwen3在不增加计算的情况下扩展到万亿参数。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @SherryYanJiang</div>
+      
+
+      
+
+      <div class="card-original">we&#39;re stoked to have @dmsobol from @cerebras speaking at @aiDotEngineer in singapore!
+
+daria designed mixture-of-experts (MoE) models, helping models like Qwen3 scale to trillions of parameters without scaling compute
+
+@swyx @aimuggle @agrimsingh @unprofeshme @ivanleomk https://t.co/qmcWVctdjK</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036880529371578565" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-25 16:22</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">期待AGI，但希望代理有财务意识</div>
+      
+
+      <div class="card-summary">我可以等待AGI的到来，但希望我们的代理尽快具备财务意识。大多数代理默认是财务鲁莽的，增加复杂性可能会导致预算超支。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @tsriram</div>
+      
+
+      
+
+      <div class="card-original">I can wait on AGI, but can our agents get some money awareness... ASAP? 💸
+
+Most agents are financially reckless by default. Add any complexity and you could one-shot your entire token budget. 🤯
+
+Excited to co-host an evening in SF with @mastra where we dig into the https://t.co/FgjeIozPAY</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036841176750543168" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-25 03:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Ralph的创造者将出席新加坡活动</div>
+      
+
+      <div class="card-summary">我们很高兴宣布Ralph的创造者Geoffrey Huntley将于5月出席新加坡的aiDotEngineer活动，更多优秀的创作者即将公布。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @SherryYanJiang</div>
+      
+
+      
+
+      <div class="card-original">we&#39;re stoked to have @GeoffreyHuntley - the creator of ralph - coming to @aiDotEngineer singapore in may!
+
+more cracked builders to announce soon...all coming to the red dot!
+
+@swyx @agrimsingh @ivanleomk @aimuggle @unprofeshme https://t.co/tpFeB78Da2</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036644131402141811" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-24 18:28</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">完全在云端的工作体验</div>
+      
+
+      <div class="card-summary">我已经三天没有在本地机器上输入`npm run dev`，这种体验令人愉悦。我的代理完全在云端，这极大地解锁了我的工作方式。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ryancarson</div>
+      
+
+      
+
+      <div class="card-original">I haven&#39;t typed `npm run dev` on my local machine for three days now and it&#39;s absolute bliss.
+
+Having my agents 100% in the cloud is a massive unlock.
+
+(One of those agents is openclaw, which is technically on my mbp in my office, but the only way I interact with it is via</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036510395293483462" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-24 17:37</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">软件安全隐患：litellm供应链攻击</div>
+      
+
+      <div class="card-summary">litellm的PyPI供应链攻击令人恐惧，简单的`pip install litellm`就足以泄露SSH密钥、云服务凭证、Kubernetes配置等敏感信息。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @karpathy</div>
+      
+
+      
+
+      <div class="card-original">Software horror: litellm PyPI supply chain attack. 
+
+Simple `pip install litellm` was enough to exfiltrate SSH keys, AWS/GCP/Azure creds, Kubernetes configs, git credentials, env vars (all your API keys), shell history, crypto wallets, SSL private keys, CI/CD secrets, database</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036497550103159030" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">S</div>
+        <div class="identity-info">
+          <div class="author-name">Swyx</div>
+          <div class="author-meta">2026-03-24 17:01</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">材料科学与AI的结合</div>
+      
+
+      <div class="card-summary">材料科学在我们的生活中无处不在，从衣物到计算机都受其影响。推文转发了@latentspacepod的内容，讨论了材料发现中的AI应用，特别是与@KulikGroup的Heather Kulik教授的对话，强调了材料科学的积极作用。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @latentspacepod</div>
+      
+
+      
+
+      <div class="card-original">🔬Why There Is No &#34;AlphaFold for Materials&#34;
+
+https://t.co/JydkB3Tnmt
+
+Materials Science is a force for good everywhere in our lives, from your clothes to the computers you use.
+
+We catch up on AI for Materials Discovery with Prof. Heather Kulik of @KulikGroup, one of the first</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/swyx/status/2036488607184421103" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">J</div>
+        <div class="identity-info">
+          <div class="author-name">Josh Woodward</div>
+          <div class="author-meta">2026-03-26 02:51</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Lyria 3 Pro发布</div>
+      
+
+      <div class="card-summary">推文转发自@GeminiApp，宣布Lyria 3 Pro正式上线，支持更长的音乐轨道。该工具简化了不同风格实验和复杂过渡的生成，帮助用户更好地实现创意。今天开始向Google AI Plus、Pro和Ultra用户推出。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @GeminiApp</div>
+      
+
+      
+
+      <div class="card-original">Longer tracks are here with Lyria 3 Pro in Gemini!
+
+From experimenting with different styles to generating tracks with complex transitions, Lyria 3 Pro makes it easier to bring your full vision to life.
+
+Rolling out today to Google AI Plus, Pro, and Ultra users. 
+
+Learn more 🧵</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/joshwoodward/status/2036999432210973036" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">K</div>
+        <div class="identity-info">
+          <div class="author-name">Kevin Weil</div>
+          <div class="author-meta">2026-03-26 15:07</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Gwynne Shotwell的影响力</div>
+      
+
+      <div class="card-summary">推文转发自@KTmBoyle，表达了对Gwynne Shotwell的赞赏，认为她应该成为家喻户晓的名字，是当代最令人印象深刻的商业领袖之一。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @KTmBoyle</div>
+      
+
+      
+
+      <div class="card-original">Great to see this. Gwynne Shotwell should be a household name. One of the most impressive business leaders of our time.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/kevinweil/status/2037184654294536379" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">K</div>
+        <div class="identity-info">
+          <div class="author-name">Kevin Weil</div>
+          <div class="author-meta">2026-03-24 04:08</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">GPT-5.4 Pro解决数学问题</div>
+      
+
+      <div class="card-summary">推文转发自@Liam06972452，称GPT-5.4 Pro成功解决了一个与机器学习相关的开放数学问题，作者几周前提交了解决方案，现已被接受。这是该网站上第二个被完全解决的问题。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Liam06972452</div>
+      
+
+      
+
+      <div class="card-original">GPT-5.4 Pro fully resolves a Machine Learning adjacent Open Math problem from https://t.co/6LqK3cvlrZ!
+
+I submitted the solution a few weeks ago and just checking now, it has been accepted.
+
+This marks the 2nd problem on the site to be fully resolved!
+https://t.co/2i19DiOqIE https://t.co/nyzQLp89sb</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/kevinweil/status/2036294133237817843" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -357,21 +1143,35 @@ shelved to do koding and enterprise saas</div>
         <div class="avatar">P</div>
         <div class="identity-info">
           <div class="author-name">Peter Yang</div>
-          <div class="author-meta">2026-03-30 14:37</div>
+          <div class="author-meta">2026-03-30 13:01</div>
         </div>
       </div>
 
       
-      <div class="card-title">刚到上海，ChatGPT 和 Claude 无法使用</div>
+      <div class="card-title">看好@meetgranola的理由</div>
       
 
-      <div class="card-summary">我刚到上海，ChatGPT 和 Claude 都无法使用（即使我有 eSIM），但我看到的第一则广告是 OpenClaw。</div>
+      <div class="card-summary">推文转发自@petergyang，表达了对@meetgranola的强烈看好，理由包括会议记录在公司中的重要性、优秀的API和MCP设计，以及@cjpedregal的人品。强调他们在会议中找到切入点的方式。</div>
 
-      <div class="card-original">Just landed in Shanghai and both ChatGPT and Claude don’t work (even with my eSIM) but the first ad I saw is for OpenClaw</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @petergyang</div>
+      
+
+      
+
+      <div class="card-original">I am incredibly bullish on @meetgranola for a few reasons:
+
+1. Meeting notes are by far the most useful context in a company
+
+2. They know how to build for agents first with great APIs and MCPs
+
+3. @cjpedregal is a stand-up human
+
+Love how they started with a wedge in meeting</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/petergyang/status/2038626570789904890" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/petergyang/status/2038602634232521073" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -381,25 +1181,31 @@ shelved to do koding and enterprise saas</div>
         <div class="avatar">P</div>
         <div class="identity-info">
           <div class="author-name">Peter Yang</div>
-          <div class="author-meta">2026-03-30 14:30</div>
+          <div class="author-meta">2026-03-30 05:03</div>
         </div>
       </div>
 
       
-      <div class="card-title">我与 Jenny 的访谈总结</div>
+      <div class="card-title">Jenny的设计思路</div>
       
 
-      <div class="card-summary">我与 Cowork 的设计负责人 Jenny 访谈的五个要点：1. 设置 Cowork 以每周发布美观的产品更新。</div>
+      <div class="card-summary">推文转发自@petergyang，提到Cowork的设计负责人Jenny分享了她对过去Claude Cowork迭代的思考，探讨了在指导用户使用Cowork与保持自由形式之间的平衡。</div>
 
-      <div class="card-original">My top 5 takeaways from my interview with Jenny (Cowork&#39;s design lead):
+      
+      <div class="card-repost-badge">↩ 转发自 @petergyang</div>
+      
 
-1. Set up Cowork to deliver weekly product updates in a beautiful deck
+      
 
-Jenny demoed using Cowork to summarize user feedback from different channels and turn that into a product priorities deck. She then</div>
+      <div class="card-original">Watching Jenny (Cowork&#39;s design lead) walk through her thinking behind all her past Claude Cowork iterations was fascinating.
+
+&#34;It&#39;s this constant balance between how much do we tell people how to use [Cowork] versus leaving it really free form for them.&#34;
+
+&#34;Over time, we stripped https://t.co/B8FcIhE2dW</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/petergyang/status/2038624824927600911" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/petergyang/status/2038482249012941102" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -409,21 +1215,33 @@ Jenny demoed using Cowork to summarize user feedback from different channels and
         <div class="avatar">P</div>
         <div class="identity-info">
           <div class="author-name">Peter Yang</div>
-          <div class="author-meta">2026-03-30 09:36</div>
+          <div class="author-meta">2026-03-28 18:58</div>
         </div>
       </div>
 
       
-      <div class="card-title">韩国男女的皮肤真好</div>
+      <div class="card-title">建造的选择</div>
       
 
-      <div class="card-summary">我想知道韩国男女的护肤程序，他们的皮肤怎么会这么好😅。</div>
+      <div class="card-summary">推文转发自@thenanyu，提出在能够构建任何东西的情况下，应该思考“应该构建什么”。强调答案不是“所有东西”，否则会被更专注的竞争对手超越。AI可能导致分心，抵制这种诱惑是关键。</div>
 
-      <div class="card-original">How is it that Korean women and men have such good skin I need to know their skincare routine 😅</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @thenanyu</div>
+      
+
+      
+
+      <div class="card-original">Now that you can build anything, you’re faced with the question: what should you build?
+
+The answer isnt “everything”. Do that and a more focused competitor eats your lunch. 
+
+AI enables distraction. Up to you to resist. See OpenAI. No more side quests.
+
+https://t.co/G8G1aGuZxk</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/petergyang/status/2038550909115080998" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/petergyang/status/2037967478203273440" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -433,21 +1251,914 @@ Jenny demoed using Cowork to summarize user feedback from different channels and
         <div class="avatar">P</div>
         <div class="identity-info">
           <div class="author-name">Peter Yang</div>
-          <div class="author-meta">2026-03-28 19:03</div>
+          <div class="author-meta">2026-03-28 18:26</div>
         </div>
       </div>
 
       
-      <div class="card-title">中国的开发者用什么编写代码？</div>
+      <div class="card-title">自助式产品的趋势</div>
       
 
-      <div class="card-summary">如果不使用 Claude Code 或 Codex，中国的开发者用什么工具来编写代码？</div>
+      <div class="card-summary">推文转发自@mattiaswikman，预测将会出现许多自助式产品，许多人相信“越多越好”。作者提到自己倾向于按照@karrisaarinen的建议进行构建，强调目标和愿景的一致性，但大多数公司在连接当前与未来的目标上投入的时间很少。</div>
 
-      <div class="card-original">What do builders in China use to vibe code if they’re not using Claude Code or Codex?</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @mattiaswikman</div>
+      
+
+      
+
+      <div class="card-original">We are going to see a lot of buffet style products for sure. A lot of people believe in &#34;more is more&#34;.
+
+I always try to build like @karrisaarinen says here. Alignment and understanding of goals + vision.
+
+Yet most companies put little time towards connecting their today to the</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/petergyang/status/2037968730278543863" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/petergyang/status/2037959532408971664" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Yang</div>
+          <div class="author-meta">2026-03-27 23:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">SOUL.MD的建议</div>
+      
+
+      <div class="card-summary">推文转发自@aaronjmars，建议每位CEO或高管都应训练一个SOUL.MD，让员工用于内部公关和评审。虽然不完美，但可以轻松将流程加速两倍。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @aaronjmars</div>
+      
+
+      
+
+      <div class="card-original">every CEO / exec should train a SOUL.MD, then let employees use it for internal PR / reviews
+
+won&#39;t be perfect, but can easily speed up process by x2 https://t.co/3LEuFGbJGy</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/petergyang/status/2037670938301665572" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Yang</div>
+          <div class="author-meta">2026-03-27 23:18</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">项目规划的新方式</div>
+      
+
+      <div class="card-summary">推文转发自@cjc，宣布花费几天时间来规划项目的时代已经结束。提到@TheLenaVu（人类而非AI）使用Linear Agent来处理待办事项、优先排序、草拟PRD并分配工作，最终将其转化为可供下次使用的技能。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @cjc</div>
+      
+
+      
+
+      <div class="card-original">The era of spending a few days to scope a project is officially over. 
+
+Watch @TheLenaVu (yes, a human, not AI) use the Linear Agent to crawl your backlog, prioritize, draft your PRD, and assign the work. And then, turn it all into a skill you can use for next time.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/petergyang/status/2037670644788400243" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">C</div>
+        <div class="identity-info">
+          <div class="author-name">Cat Wu</div>
+          <div class="author-meta">2026-03-29 01:47</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Claude Code 自动修复功能上线</div>
+      
+
+      <div class="card-summary">Claude Code 现在可以在云端自动修复 CI 失败和处理评论，使得 PR 始终保持绿色。用户可以完全离开，待返回时 PR 已准备就绪。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @noahzweben</div>
+      
+
+      
+
+      <div class="card-original">Thrilled to announce Claude Code auto-fix – in the cloud. Web/Mobile sessions can now automatically follow PRs - fixing CI failures and addressing comments so that your PR is always green.
+
+This happens remotely so you can fully walk away and come back to a ready-to-go PR. https://t.co/F41RTeymXJ</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/_catwu/status/2038070445921206349" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-30 14:46</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit 解锁新工具的潜力</div>
+      
+
+      <div class="card-summary">很多人尚未完全理解 @Replit 等工具的潜力。这不仅仅是“更快的编码”或“AI 帮助构建”，而是一个想法几乎可以立即变成真实、可用和可测试的东西。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @rickyfunk</div>
+      
+
+      
+
+      <div class="card-original">I think a lot of people still have not fully understood what tools like @Replit  are about to unlock.
+
+It is not just “faster coding.”
+It is not just “AI helps you build.”
+
+It is that an idea can go from your head to something real, usable, and testable almost immediately.
+
+I had</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2038628850767200349" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-29 22:35</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit 带来的巨大收益</div>
+      
+
+      <div class="card-summary">在 Replit 上花费 400 美元和一周时间，年收入达 800 万美元。有些获得资金的初创公司在第一次外出活动上花费更多，仍然没有付费客户。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @jasonth0</div>
+      
+
+      
+
+      <div class="card-original">$400 and one week on replit to $8M ARR. i know funded startups that spent more on their first offsite and still don&#39;t have paying customers</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2038384471121002636" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-29 21:44</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">从零到千万的成功故事</div>
+      
+
+      <div class="card-summary">一位非软件开发者用 400 美元创建的应用程序，几乎立即获得了 1.5 万美元的客户。一年后，他赚了 250 万美元，今年预计将赚 700 万美元。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @mhp_guy</div>
+      
+
+      
+
+      <div class="card-original">This guy vibecoded an app that landed him a $15,000 customer almost Instantly. 
+
+A year later, he&#39;s made $2.5M
+This year? He&#39;s projected to make $7M
+
+Guys, please listen carefully to me with this:
+- He is not a software developer
+- He started this with $400
+
+If you are watching https://t.co/y8AJlFPsSn</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2038371795921723500" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-29 01:32</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新颖的文本渲染方式</div>
+      
+
+      <div class="card-summary">分享了一种新的文本渲染方式，并展示了快速演示。提示：在 Replit 中可以链接到代码库并请求演示，非常适合像我这样的计算机科学新手。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @MannyBernabe</div>
+      
+
+      
+
+      <div class="card-original">Cool new way to render text. Spun up a quick demo to play with and learn more:
+
+https://t.co/9U4Jl6Qmt2 
+
+Tip: In Replit, you can just link to repo and ask for demo. 😎 Not only will you get cool demo, but you can also as Agent to explain it. Helpful for CS newbies like me! 😅 https://t.co/siv5o5JrEj</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2038066719311220980" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-28 18:01</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit 社区的活跃度</div>
+      
+
+      <div class="card-summary">尽管我参与了一些社区，但 @Replit 的社区活跃度令人惊叹，参与人数接近 5000，社区氛围如电流般活跃！</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ChrisMakeSense</div>
+      
+
+      
+
+      <div class="card-original">Like I am active in some communities but honestly this community @Replit is on a whole other path! I reckon you be easy up to the 5,000 people participating in this and the community OMG is ACTIVE like Electricity!!!</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037953286163066936" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-28 07:38</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">使用八睡眠技能</div>
+      
+
+      <div class="card-summary">今天很长的一天，使用八睡眠技能让我在结束时叫醒我，确保没有错误。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @wimbet</div>
+      
+
+      
+
+      <div class="card-original">long day. use the eight sleep skill to wake me when its done. make no mistakes. https://t.co/iAqCSMbbtO</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037796574538211792" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-27 22:02</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">我的量化交易工具</div>
+      
+
+      <div class="card-summary">这是我的量化交易工具。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @teddypowday</div>
+      
+
+      
+
+      <div class="card-original">This is my quant https://t.co/PQaLZOPJ20</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037651547090559257" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-27 18:39</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">针对基督教徒的阴谋论</div>
+      
+
+      <div class="card-summary">Tablet 杂志声称我和 @agoradotorg 的同事们是针对美国基督教徒的“行动组织”一部分。这种阴谋论不会阻止我们为基督教和巴勒斯坦权利发声。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @KhalilJeries</div>
+      
+
+      
+
+      <div class="card-original">Tablet magazine claims my @agoradotorg colleagues and I are part of an &#34;OP&#34; targeting American Christians. Such conspiracy theories won&#39;t stop us from standing for Christian and Palestinian rights. https://t.co/AqIjq4yWlb</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037600450464358614" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-26 18:37</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">如何让自己免受 AI 影响</div>
+      
+
+      <div class="card-summary">Replit 的 CEO 分享了如何在不写一行代码的情况下，让自己免受 AI 影响的方法。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Codie_Sanchez</div>
+      
+
+      
+
+      <div class="card-original">The CEO of Replit on how to AI-proof yourself (without writing a single line of code): https://t.co/NyczB68auD</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037237400678916419" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-26 18:36</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">如何在AI浪潮中获利</div>
+      
+
+      <div class="card-summary">转发自 @Codie_Sanchez 的推文提到，想要在AI浪潮中获利而不需要编写代码，可以考虑进入以交易或服务为基础的行业，如暖通空调、管道、电气、害虫控制和窗户清洁等。这些行业需要现场持证人员，尚未找到在深夜自动化处理堵塞排水的方法。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Codie_Sanchez</div>
+      
+
+      
+
+      <div class="card-original">How to profit from the AI boom without writing a single line of code:
+
+1. Get into a trade or service-based business
+
+-HVAC
+-Plumbing
+-Electrical
+-Pest control
+-Window cleaning
+
+These need a licensed body on-site. Nobody has figured out how to automate a clogged drain at 11pm on</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037237357339173138" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-26 03:12</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">实现愿景的合作</div>
+      
+
+      <div class="card-summary">转发自 @GoogleCloud_SG 的推文宣布，他们与 @Replit 合作，将“氛围编码”带入企业。通过使用 #Gemini，用户可以将简单的文本描述转化为完全部署的软件，赋能任何人进行构建。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @GoogleCloud_SG</div>
+      
+
+      
+
+      <div class="card-original">Turn your vision into reality, instantly ✨ 
+
+We&#39;ve partnered with @Replit to bring &#34;vibe coding&#34; to enterprises! Use #Gemini to transform simple text descriptions into fully deployed software, empowering anyone to build. 
+
+Learn more ⬇️ https://t.co/Q0kqmmnIM2</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2037004858784432389" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-25 21:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">不再纠结于购买与构建</div>
+      
+
+      <div class="card-summary">转发自 @pirroh 的推文指出，购买与构建的困境已经不复存在，建议大家始终从构建开始。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @pirroh</div>
+      
+
+      
+
+      <div class="card-original">The Buy vs Build dilemma is no more.
+Always start by building.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036916373188710500" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-25 21:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit CEO谈氛围编码</div>
+      
+
+      <div class="card-summary">转发自 @axios 的推文中，Replit CEO @amasad 讨论了氛围编码。他提到，十年前他们的公司成立时就有创造一亿新软件开发者的使命，而如今AI的崛起使得AI在编码方面表现出色。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @axios</div>
+      
+
+      
+
+      <div class="card-original">.@replit CEO @amasad on vibe coding: 
+
+&#34;We started our company even 10 years ago before vibe coding, with the express mission of creating a billion new software developers. Now, with the rise of AI, what happened is AI turned out to be really good at coding.&#34; #AxiosAISummit https://t.co/mqi9SCE5xN</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036915786527183178" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-25 04:48</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">意大利与英国的氛围编码对话</div>
+      
+
+      <div class="card-summary">转发自 @shernazdaver 的推文展示了 @pirroh 与 @etnshow 主持人之间的对话，讨论了氛围编码。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @shernazdaver</div>
+      
+
+      
+
+      <div class="card-original">When the Italian talks vibecoding with the Brits! @pirroh of @replit with the hosts of @etnshow</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036666398022541795" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 22:52</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AGI氛围编码的到来</div>
+      
+
+      <div class="card-summary">转发自 @etnshow 的推文中，Replit 总裁 @pirroh 表示，氛围编码的AGI将在2028年之前到来。他预计到2026年底，模型和代理需要具备的核心功能将会成熟，成为优秀的氛围编码工作马。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @etnshow</div>
+      
+
+      
+
+      <div class="card-original">Michele Catasta (@pirroh) President of Replit (@Replit) says &#34;AGI for vibe-coding is coming earlier than 2028&#34;:
+
+&#34;I would expect by the end of 2026, a lot of the core functionalities that models and agents have to have, in order to become very good vibe coding workhorses, will be https://t.co/CT33p75See</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036576988090315099" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 22:24</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit AI负责人即将出席</div>
+      
+
+      <div class="card-summary">转发自 @etnshow 的推文宣布，Replit 的总裁兼AI负责人 Michele Catasta (@pirroh) 将于明天格林威治时间下午1:45出席活动。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @etnshow</div>
+      
+
+      
+
+      <div class="card-original">BREAKING: President &amp;amp; Head of AI @Replit, Michele Catasta (@pirroh) is joining us tomorrow at 1:45PM GMT https://t.co/64jVpYwKa8</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036569868510822646" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 02:42</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">在Replit上构建AI操作系统</div>
+      
+
+      <div class="card-summary">转发自 @rickyfunk 的推文中，他分享了自己在Replit上实时构建完整AI操作系统的经历，记录了每一个步骤，强调零本地设置、仅需一个浏览器标签的真实生产应用。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @rickyfunk</div>
+      
+
+      
+
+      <div class="card-original">I built a full AI operating system live on Replit and recorded every step.
+
+Zero local setup. One browser tab. Real production app.
+
+Tutorial → https://t.co/1HEl6wvxzN
+
+@Replit @nickco #replit</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036272375352926652" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 01:18</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit的使用体验</div>
+      
+
+      <div class="card-summary">转发自 @svpino 的推文提到，他从去年底开始持续使用Replit，尤其是在他们发布Agent 3后。这让他作为开发者能够“放手”，无需担心代码，同时也成为教孩子学习网页开发的好方法。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @svpino</div>
+      
+
+      
+
+      <div class="card-original">Why aren&#39;t more people talking about Replit right now?
+
+I started using Replit consistently late last year when they released Agent 3. It was my way to &#34;let go&#34; as a developer and build things without worrying about the code.
+
+It&#39;s actually been a good way to teach my kid &#34;web https://t.co/qXLCGJRhVD</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036251261683867694" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 01:16</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit销售奇迹</div>
+      
+
+      <div class="card-summary">转发自 @gtmba_ 的推文提到，@Replit 的第一名销售员成功签下350万美元的交易，而在此之前他从未销售过任何东西。他来自美国海军陆战队，销售配额、区域和销售方法对他来说都是新概念，但他对产品非常了解，并在构建自己的培训材料。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @gtmba_</div>
+      
+
+      
+
+      <div class="card-original">@Replit&#39;s #1 seller closed a $3.5 million deal.
+
+Before then? He’d never sold anything in his life.
+
+He came from the US Marine Corps. 
+
+Quotas, territories, sales methodologies were all novel concepts to him.
+
+But he knew the product inside and out. He was building his training https://t.co/aPPCl75aXl</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036250876814434599" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 01:16</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit 应用数量激增</div>
+      
+
+      <div class="card-summary">四个月前，我的网站上只有 3 个由 @Replit 构建的应用，现在已经增加到 16 个，包括 PRM、街机、图像工具等，此外还有许多无法公开分享的项目，如 Slack 自动化中心和产品反馈处理机器人。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @tannerlbraden</div>
+      
+
+      
+
+      <div class="card-original">Four months ago I had 3 @Replit-built apps on my site. Now there are 16.
+
+PRM, arcade, image tools, url-to-anything, certifications, 等等.
+
+There are dozens more that I can&#39;t share externally: Slack automations hub, bespoke partner demos, product feedback triage bot, music https://t.co/corX9oWoxX</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036250786100027620" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Amjad Masad</div>
+          <div class="author-meta">2026-03-24 01:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Replit 新代理表现出色</div>
+      
+
+      <div class="card-summary">@Replit 的新代理表现非常出色，令人印象深刻。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @_msec_</div>
+      
+
+      
+
+      <div class="card-original">Damn. Gotta say @Replit &#39;s new agent is so good. 😎 https://t.co/TZeMu6U6Xg</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/amasad/status/2036250348055306629" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Guillermo Rauch</div>
+          <div class="author-meta">2026-03-27 15:25</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">成功创业者的技术栈</div>
+      
+
+      <div class="card-summary">建立盈利初创公司的创始人通常使用 NextJS、TailwindCSS 和 PostgreSQL，基于 200 个案例的研究结果。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @marclou</div>
+      
+
+      
+
+      <div class="card-original">Founders who build profitable startups use NextJS + TailwindCSS + PostgreSQL
+
+n=200 https://t.co/JX2FSDR2w7</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/rauchg/status/2037551607945298203" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Guillermo Rauch</div>
+          <div class="author-meta">2026-03-25 21:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">...</div>
+      
+
+      <div class="card-summary">（推文内容为空，无法提供翻译）</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @RohdeAli</div>
+      
+
+      
+
+      <div class="card-original">https://t.co/eaG9dvy9qd</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/rauchg/status/2036915930509566235" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aaron Levie</div>
+          <div class="author-meta">2026-03-26 15:32</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Enclave 项目正式发布</div>
+      
+
+      <div class="card-summary">在几个月的隐秘开发后，我和我的联合创始人 @DvirSegev 和 @Yanir_ 终于向世界分享 Enclave。AI 改变了代码创建，但现在的瓶颈在于审查。如果安全性停滞在 1 倍速度，就无法以 10 倍速度交付。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @talhof8</div>
+      
+
+      
+
+      <div class="card-original">After months in stealth, my cofounders @DvirSegev, @Yanir_ and I are finally sharing Enclave with the world. 🌎
+
+AI changed code creation, but the bottleneck is now review. You can’t ship at 10x speed if your security is stuck at 1x.
+
+Independent security is a must. You wouldn’t</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/levie/status/2037191043855298769" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -457,23 +2168,31 @@ Jenny demoed using Cowork to summarize user feedback from different channels and
         <div class="avatar">G</div>
         <div class="identity-info">
           <div class="author-name">Garry Tan</div>
-          <div class="author-meta">2026-03-30 13:49</div>
+          <div class="author-meta">2026-03-30 15:44</div>
         </div>
       </div>
 
       
-      <div class="card-title">这里的回复大多是自我安慰</div>
+      <div class="card-title">谷歌对上下文窗口的看法</div>
       
 
-      <div class="card-summary">这需要练习和不断改进的工具集。</div>
+      <div class="card-summary">谷歌的 Jeff Dean 表示，单靠更大的上下文窗口是不够的，关键在于分阶段检索：使用轻量机制将万亿个标记缩小到 1000 万，再到实际需要的百万个。“你不需要一次性处理万亿个，只需正确的百万个。”</div>
 
-      <div class="card-original">The replies here are mostly cope
+      
+      <div class="card-repost-badge">↩ 转发自 @slow_developer</div>
+      
 
-It takes practice and an ever improving toolset</div>
+      
+
+      <div class="card-original">Google Jeff Dean says bigger context windows alone are not enough
+
+What matters is staged retrieval: lightweight mechanisms that narrow a trillion tokens down to 10 million, then to the million you actually need
+
+&#34;you don&#39;t need a trillion at once, you need the right million&#34; https://t.co/7pwH4rcrNA</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/garrytan/status/2038614590704222469" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/garrytan/status/2038643630441980148" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -483,21 +2202,29 @@ It takes practice and an ever improving toolset</div>
         <div class="avatar">G</div>
         <div class="identity-info">
           <div class="author-name">Garry Tan</div>
-          <div class="author-meta">2026-03-30 10:01</div>
+          <div class="author-meta">2026-03-30 15:44</div>
         </div>
       </div>
 
       
-      <div class="card-title">废除 SB1380</div>
+      <div class="card-title">使命被忽视</div>
       
 
-      <div class="card-summary">呼吁废除 SB1380 法案。</div>
+      <div class="card-summary">Ronen 失联，现在 Fielder 也面临同样问题。随着越来越多心理不稳定的成瘾者从 TL/SOMA 被转移到这里，治理早已外包给非营利组织和压力团体，他们对伪监督者批准预算感到满意。</div>
 
-      <div class="card-original">Repeal SB1380</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @emissionite</div>
+      
+
+      
+
+      <div class="card-original">Ronen was MIA, now Fielder is next. The Mission remains neglected as more mentally unstable addicts are moved here from TL/SOMA, with no pushback.
+
+Governance was outsourced long ago to nonprofits and pressure groups, who are fine with a pseudo supervisor approving their budgets.</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/garrytan/status/2038557113363091929" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/garrytan/status/2038643564318744732" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -507,21 +2234,27 @@ It takes practice and an ever improving toolset</div>
         <div class="avatar">G</div>
         <div class="identity-info">
           <div class="author-name">Garry Tan</div>
-          <div class="author-meta">2026-03-30 09:33</div>
+          <div class="author-meta">2026-03-30 15:43</div>
         </div>
       </div>
 
       
-      <div class="card-title">GStack 现在在 Scira Agent 中</div>
+      <div class="card-title">美国左翼的极端主义问题</div>
       
 
-      <div class="card-summary">GStack 现在已经集成到 Scira Agent 中！</div>
+      <div class="card-summary">“主流美国左翼并没有努力清除其极端主义分支，而是选择忽视、淡化或为日益增长的暴力辩护……许多看似主流的自由组织为颠覆性团体提供了隐蔽支持。”</div>
 
-      <div class="card-original">GStack is now in Scira Agent!</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @robkhenderson</div>
+      
+
+      
+
+      <div class="card-original">&#34;Rather than working to expunge its extremist wing, the mainstream American left mostly chooses to ignore, play down or justify the rising violence...many seemingly mainstream liberal organizations offer well-camouflaged support to subversive groups.&#34; https://t.co/NqzHWBwiS3</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/garrytan/status/2038550184913944742" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/garrytan/status/2038643380092359024" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -531,23 +2264,592 @@ It takes practice and an ever improving toolset</div>
         <div class="avatar">G</div>
         <div class="identity-info">
           <div class="author-name">Garry Tan</div>
-          <div class="author-meta">2026-03-30 09:17</div>
+          <div class="author-meta">2026-03-30 15:42</div>
         </div>
       </div>
 
       
-      <div class="card-title">我正在实现今天的每一个想法</div>
+      <div class="card-title">AI 头脑风暴工具的怀疑</div>
       
 
-      <div class="card-summary">我正在构建今天想到的每一个想法，而不是仅仅把它们放进 Apple Notes。</div>
+      <div class="card-summary">我对 AI “头脑风暴”合作伙伴持怀疑态度，因为它们往往默认使用南方公园的“喜欢这个想法……”。不过，@garrytan 的 gstack 确实非常有用，是我尝试过的最佳工具之一。</div>
 
-      <div class="card-original">I&#39;m literally just building every idea I had today instead of just putting it into Apple Notes
+      
+      <div class="card-repost-badge">↩ 转发自 @kevinrose</div>
+      
 
-Open @conductor_build, create a new project, open a new branch, start on it... and it will be in reality shortly.</div>
+      
+
+      <div class="card-original">I’ve been pretty skeptical of AI “brainstorming” partners - they tend to default to the south park &#34;loving this idea...&#34;. That said, @garrytan’s gstack has been genuinely useful, one of the best tools I’ve tried.</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/garrytan/status/2038546148290691189" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/garrytan/status/2038643040932470832" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">使用 gstack 提高效率</div>
+      
+
+      <div class="card-summary">我曾在一些功能上拖延，但在使用 @conductor_build 和 gstack 后，迅速解决了这些问题！只需打开工作区，开始办公时间，一切就顺利了。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @avinashjoshi</div>
+      
+
+      
+
+      <div class="card-original">There were features that I’d procatinste a lot on. Kept pushing it. But with @conductor_build and gstack, I got it out of the way quickly!
+
+Just open a workspace, start with office hours and you’re golden 👌
+
+It just works!</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038637174770528740" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">感谢我的朋友和合伙人</div>
+      
+
+      <div class="card-summary">转发自 @MRadhuber，表达了对自己在 W26 批次中同伴的感激之情，认为 Q1 是改变人生的时刻，并感谢自己的联合创始人 @shiprajhahirani 和其他合作者 @sdianahu 及 @vivianmshen。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @MRadhuber</div>
+      
+
+      
+
+      <div class="card-original">have you ever heard anyone say
+
+“man, q1 was life changing”
+
+grateful for the absolutely insane bar set by my w26 batchmates 
+
+lucky to now call many of them friends
+
+grateful for my amazing cofounder @shiprajhahirani and our coconspirators @sdianahu and @vivianmshen 
+
+and for https://t.co/t02ToO1NN4</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038637126477381906" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">成为菲利普·约翰斯顿</div>
+      
+
+      <div class="card-summary">转发自 @SebJohnsonUK，描述了菲利普·约翰斯顿的成长经历，包括他在英国吉尔福德出生，部分童年在南非度过，随后在诺丁汉大学学习数学，并以优异成绩毕业，加入门萨，开始高频交易生涯，之后短暂进入风险投资，最后加入麦肯锡。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @SebJohnsonUK</div>
+      
+
+      
+
+      <div class="card-original">Be Philip Johnston:
+
+&amp;gt; Born in Guildford, UK 
+&amp;gt; Spends part of childhood in South Africa 
+&amp;gt; Study Maths at University of Nottingham
+&amp;gt; Graduate top of class, joins Mensa 
+&amp;gt; Start career in high-frequency trading 
+&amp;gt; Moves into VC for a bit
+&amp;gt; Joins McKinsey working on satellite and</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038636047077396599" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Starcloud 成功融资</div>
+      
+
+      <div class="card-summary">转发自 @StockSavvyShay，Starcloud（Y Combinator 历史上最快的独角兽）刚刚以 11 亿美元估值完成 1.7 亿美元的 A 轮融资。该公司正在太空中建立轨道数据中心，以解决地球上的 AI 能源瓶颈问题。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @StockSavvyShay</div>
+      
+
+      
+
+      <div class="card-original">Starcloud (fastest unicorn in Y Combinator history) just raised a $170M Series A at a $1.1B valuation.
+
+The company is building orbital data centers in space to tackle the AI energy bottleneck on Earth. https://t.co/96vMuf9EHg</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038636002139664636" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:13</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">左派对 AI 的否认理论</div>
+      
+
+      <div class="card-summary">转发自 @deanwball，作者提出了一个理论，认为许多左派对 AI 的否认源于他们的世界观，认为“科技行业”由肤浅的愚蠢者组成，他们的成就总是表面化的，永远不“真实”，总是基于某种重大盗窃。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @deanwball</div>
+      
+
+      
+
+      <div class="card-original">My theory about why so many on the left remain in denial about AI is that their worldview rests on a load-bearing notion of “the tech industry” as being composed of vapid morons whose accomplishments will always be superficial, never “real,” always based on some grand theft.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038635810204053780" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:09</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI 时代人类高薪工作的可能性</div>
+      
+
+      <div class="card-summary">转发自 @sarthakgh，@Noahpinion 提出了一个基于第一原则的优秀案例，探讨了在 AI 优于人类完成几乎所有当前任务的时代，人类如何能够获得高薪工作。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @sarthakgh</div>
+      
+
+      
+
+      <div class="card-original">Excellent first-principles based case by @Noahpinion for how humans could end up with high-paying jobs in the era of AI being better than humans at virtually all current set of tasks 
+
+https://t.co/7ZKNEDL2jr</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038634830611771857" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:09</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">加州亿万富翁税的扩展</div>
+      
+
+      <div class="card-summary">转发自 @Twolfrecovery，警告称加州希望将亿万富翁税扩展到所有人。如果你支持这一点，未来可能会面临 5% 资产被征收的风险。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Twolfrecovery</div>
+      
+
+      
+
+      <div class="card-original">I told you. They want to extend the billionaire tax in California to everyone. If you support it, your setting yourself up to have 5% of your assets seized down the road.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038634787066495398" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:06</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Y Combinator 冬季批次结束</div>
+      
+
+      <div class="card-summary">转发自 @raphaelschaad，宣布 2026 年冬季 Y Combinator 批次已结束，但进展条仅为 1%。为每一位创始人感到自豪。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @raphaelschaad</div>
+      
+
+      
+
+      <div class="card-original">Winter 2026 @ycombinator batch is a wrap! But the progress bar is only at 1%. Proud of every single founder 🫡 https://t.co/NW4UVmvh6Q</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038634034738393326" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:05</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">司法改革的重要性</div>
+      
+
+      <div class="card-summary">转发自 @incitafusio，强调司法改革对维护刑事司法的重要性。旧金山高等法院按法律要求必须向加州司法委员会提交刑事法庭清理率，但多年来未能做到。州领导层必须执行，但未能采取行动。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @incitafusio</div>
+      
+
+      
+
+      <div class="card-original">Judicial reform is imperative for upholding criminal justice. By law, SF Superior Courts must submit criminal court clearance rates to CA Judicial Council - they havent for years. State leadership must enforce, but isnt doing so. Why?  @MattMahanSJ 
+https://t.co/Sw3NY3SHWR https://t.co/5sQoiK7cGF</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038633639777599734" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:04</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">青少年与社会责任</div>
+      
+
+      <div class="card-summary">转发自 @jessegenet，指出我们创造了“青少年”这一概念，社会富裕到可以推迟成年生活的真正责任，但许多青少年希望参与社会。禁止他们工作（法律上）导致他们兴趣被浪费，进而感到孤立和沮丧。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @jessegenet</div>
+      
+
+      
+
+      <div class="card-original">We invented “teenagers” 
+
+Our society is rich enough to delay the true responsibilities of adult life, but many teenagers want to participate in society
+
+We squander their interest in work by forbidding it (legally) and then wonder why they are withdrawn and frustrated
+
+🙃</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038633590288986322" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 15:04</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">软件与 AI 状态报告</div>
+      
+
+      <div class="card-summary">转发自 @chrija，感谢 @Redpoint 提供的软件与 AI 状态报告，@loganbartlett 的贡献。作者对“构建与购买”部分表示不同意见，质疑是否真的需要大约 12 名工程师为 1 个客户构建/维护一个 Slack 克隆，认为 AI 在代码方面的能力不断提升。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @chrija</div>
+      
+
+      
+
+      <div class="card-original">This is a great report on the state of software and AI by @Redpoint - thank you, @loganbartlett!
+
+Where I disagree is the build vs. buy slide:
+
+1) I&#39;m not sure if it takes ~12 engineers to build/maintain a Slack clone for 1 customer. As AI keeps getting better at not only code https://t.co/OAOy7ex7vj</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038633349401694274" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 10:41</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">现在有两个互联网</div>
+      
+
+      <div class="card-summary">目前存在两个互联网：一个是AGI几乎已到来，代码自动生成，代理运行整个工作流程，创始人们谈论10倍的生产力提升；另一个则是一个真实客户用真实金钱拍摄他们笔记本电脑屏幕的场景。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @tibo_maker</div>
+      
+
+      
+
+      <div class="card-original">there are genuinely 2 internets right now
+
+1. where AGI is basically here, codebases write themselves, agents run entire workflows, and every founder is talking about their 10x productivity gains
+
+2. where a real customer, paying real money, takes a photo of their laptop screen</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038567173560627350" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 10:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Git工作树的潜力</div>
+      
+
+      <div class="card-summary">Git工作树多年来一直被忽视，直到需要并行代理的需求让我们意识到它的重要性。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @amritwt</div>
+      
+
+      
+
+      <div class="card-original">git worktrees were lying in the shadows for so many years then the need to run parallel agents revealed the light to us</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038560371171360771" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 09:32</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">GStack的惊人体验</div>
+      
+
+      <div class="card-summary">最近几天我深入研究GStack，感到非常震撼。我与一家没有任何工具的本地企业合作，经过压力测试和真实客户验证，我构建了一个稳固的MVP，业主承诺购买。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Marsbanditt</div>
+      
+
+      
+
+      <div class="card-original">I&#39;ve been deep in GStack the past few days… and I’m genuinely blown away. @garrytan 
+
+I Sat down with a local business that had zero tools in their operations. After stress-testing and real customer validation, I built a solid MVP — and the owner committed to buying it on the</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038549995046256943" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 08:00</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI的潜在影响</div>
+      
+
+      <div class="card-summary">只有当你意识到并完全理解前沿实验室的高级领导和大多数研究人员*真正相信*的事情时，你才能真正理解强大AI对世界潜在影响的重大程度。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @deredleritt3r</div>
+      
+
+      
+
+      <div class="card-original">You don&#39;t truly understand the magnitude of the potential impact of powerful AI on the world unless you are aware, and have fully internalized, that senior leadership and most researchers at the frontier labs *actually believe* the following:
+
+1.  Existing AI is already</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038526834263064990" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 08:00</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">YC的真实意义</div>
+      
+
+      <div class="card-summary">人们认为@ycombinator是一个为期三个月的项目，一旦结束就结束。其实不然，YC是由人组成的，这就是它从未真正结束的原因。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ozgul_oncel</div>
+      
+
+      
+
+      <div class="card-original">People think @ycombinator is a 3 month program. Once it ends, it ends.
+
+Wrong.
+
+YC is the people. That’s why it never really ends. https://t.co/XGVyMF0k33</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038526657980662205" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">G</div>
+        <div class="identity-info">
+          <div class="author-name">Garry Tan</div>
+          <div class="author-meta">2026-03-30 07:41</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Garry Tan的开源思维</div>
+      
+
+      <div class="card-summary">Garry Tan将他的整个思维操作系统开源为Claude Code技能（gstack），不仅仅是开发工具，还包括他的YC指导方法、创始人决策和产品品味，全部以AI命令的形式编码。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ayyi1diz</div>
+      
+
+      
+
+      <div class="card-original">Garry Tan open-sourced his entire thinking OS as Claude Code skills (gstack).
+
+Not just dev tools. His actual YC mentorship methodology, founder decision-making, and product taste — all encoded as AI commands.
+
+The crown jewel: /office-hours
+
+6 forcing questions that strip away</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/garrytan/status/2038521881746444420" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
@@ -557,21 +2859,2441 @@ Open @conductor_build, create a new project, open a new branch, start on it... a
         <div class="avatar">M</div>
         <div class="identity-info">
           <div class="author-name">Matt Turck</div>
-          <div class="author-meta">2026-03-30 12:53</div>
+          <div class="author-meta">2026-03-30 02:35</div>
         </div>
       </div>
 
       
-      <div class="card-title">奉承是我最喜欢的AI功能</div>
+      <div class="card-title">...</div>
       
 
-      <div class="card-summary">这条推文表达了对AI中奉承特性的喜爱。</div>
+      <div class="card-summary">...</div>
 
-      <div class="card-original">Sycophancy is my favorite AI feature https://t.co/HmfhH0zBsa</div>
+      
+      <div class="card-repost-badge">↩ 转发自 @loganbartlett</div>
+      
+
+      
+
+      <div class="card-original">https://t.co/7NjY5Rqi05</div>
 
       <div class="card-footer">
         <div class="card-link">
-          <a href="https://x.com/mattturck/status/2038600434156253288" target="_blank" rel="noopener">查看原推 ↗</a>
+          <a href="https://x.com/mattturck/status/2038445033519464647" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-28 11:48</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">推荐的播客</div>
+      
+
+      <div class="card-summary">我刚刚听完@mattturck的播客，强烈推荐。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @MihaiButnaru</div>
+      
+
+      
+
+      <div class="card-original">Finished listening to this podcast by @mattturck 
+
+Totally recommend. https://t.co/QKDFs9I76C</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2037859372882182520" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-27 23:12</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新的基准成就</div>
+      
+
+      <div class="card-summary">我们最近达到了一个新基准：在不到2分钟的时间内启动50,000个沙盒。强化学习训练工作负载需要大规模的并行化，要求数百万个并发环境。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ivanburazin</div>
+      
+
+      
+
+      <div class="card-original">We recently hit a new benchmark: 50,000 sandboxes spinning up in just under 2 mins
+
+RL training workloads need massive parallelization at scale, requiring millions of concurrent environments.
+
+Most customers don&#39;t want the DIY overhead of manually setting up and maintaining the</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2037669203449164262" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-27 14:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">下一代代理基础设施</div>
+      
+
+      <div class="card-summary">在@daytonaio计算大会上，@Get_Writer的联合创始人兼CTO @waseem_s与@FirstMarkCap的风险投资家@mattturck坐下来讨论下一代代理基础设施的构想：不仅是在沙盒中运行代码，而是运行整个代理。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @daytonaio</div>
+      
+
+      
+
+      <div class="card-original">What does the next generation of agent infrastructure look like? At the @daytonaio Compute Conference, @waseem_s, co-founder &amp;amp; CTO of @Get_Writer sat down with @mattturck, VC at @FirstMarkCap, to make the case: not just running code inside sandboxes, but running entire agents, https://t.co/oXqaM4QW5i</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2037535533400809931" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-27 14:02</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">特朗普与马阿拉歌的比喻</div>
+      
+
+      <div class="card-summary">法国参议员克劳德·马吕雷特（Claude Malhuret）形象地比喻特朗普为“世界上唯一一个带着自己瓷器店的公牛”，暗指他在权力中心的表现。马吕雷特指出，当小丑接管宫殿时，他不会成为国王，而是宫殿会变成马戏团。这一观点深刻揭示了特朗普的领导风格和政治环境。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @AlexTaylorNews</div>
+      
+
+      
+
+      <div class="card-original">&#34;Trump, the Mar-a-Lago golfer, is the only bull in the world who walks around with his own china shop. When a clown takes over the Palace, he doesn&#39;t become King. It&#39;s the Palace that becomes a circus&#34;
+
+French senator Claude Malhuret once again nails it. You won&#39;t hear a better https://t.co/q2mpL7XFtK</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2037530810706763923" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-25 21:30</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Gradium TTS的速度优势</div>
+      
+
+      <div class="card-summary">Gradium TTS的速度超过了ElevenLabs Turbo和GPT-4o Mini，达到214毫秒的P50延迟，非常适合实时互动。推文中提到，Gradium展示了如何正确测量首次音频时间，并在整个系统中减少延迟，相关博客链接在评论中。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @GradiumAI</div>
+      
+
+      
+
+      <div class="card-original">Gradium TTS is faster than ElevenLabs Turbo and GPT-4o Mini, hitting 214ms P50 with multiplexing. This makes it a perfect choice for real-time interaction.
+
+We show how to measure Time-to-First-Audio correctly and cut latency across the stack.
+Blog post link in the comments. https://t.co/PF1XkONf0h</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2036918610036166813" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-25 18:00</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">ARC-AGI-3基准测试发布</div>
+      
+
+      <div class="card-summary">ARC-AGI-3现已发布，旨在通过互动推理环境评估智能代理的能力。要超越ARC-AGI-3，AI系统需要在所有环境中达到或超过人类的行动效率，尤其是在首次接触这些环境时。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @fchollet</div>
+      
+
+      
+
+      <div class="card-original">ARC-AGI-3 is out now! We&#39;ve designed the benchmark to evaluate agentic intelligence via interactive reasoning environments. Beating ARC-AGI-3 will be achieved when an AI system matches or exceeds human-level action efficiency on all environments, upon seeing them for the first https://t.co/zHLOS1ncr7</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2036865902654746892" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-25 17:48</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">稳定币的未来支付方式</div>
+      
+
+      <div class="card-summary">稳定币正在崛起成为未来支付的方式，但想象一下，如果你的银行账户是公开的……这实际上就是当前稳定币的运作方式。推文提到，@sidgandhi_xyz和@calummoore通过@payy_link正在解决这个问题，结合了链上支付的优势和机构的好处。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @adamn</div>
+      
+
+      
+
+      <div class="card-original">Stablecoins are emerging as the future of payments, but
+imagine your bank account was public....
+
+That’s basically how stablecoins work today.
+
+@sidgandhi_xyz + @calummoore are fixing that with @payy_link , all the benefits of on chain payments with the benefits of institutional</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2036862896097870288" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-24 19:49</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">年度工程组织调查</div>
+      
+
+      <div class="card-summary">我们每年对CTO和CPO公会进行调查，以了解顶尖工程组织在人员、流程、指标、工具和平台转变方面的运作情况。推文中提到了一些快速的调查结果，暗示了行业内的最佳实践。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @FirstMarkCap</div>
+      
+
+      
+
+      <div class="card-original">We survey our CTO &amp;amp; CPO Guilds every year to understand how top engineering orgs are operating across people, processes, metrics, tools, and platform shifts. Some quick takeaways 🧵</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2036530740288946687" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-23 23:07</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">法国世界杯客场球衣致敬自由女神像</div>
+      
+
+      <div class="card-summary">法国国家队的世界杯客场球衣向自由女神像致敬，其颜色模仿了1886年由法国赠送给美国的这座雕像。推文配有相关图片，展示了球衣的设计灵感。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @MenInBlazers</div>
+      
+
+      
+
+      <div class="card-original">France&#39;s away jersey for the World Cup is an homage to the Statue of Liberty 🗽  
+
+Its colors mimic those of the statue, gifted to the US by France in 1886 🇫🇷 https://t.co/X4Tdl3uTIF</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2036218274690523174" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">M</div>
+        <div class="identity-info">
+          <div class="author-name">Matt Turck</div>
+          <div class="author-meta">2026-03-23 16:35</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">TensorZero Autopilot项目的兴奋</div>
+      
+
+      <div class="card-summary">TensorZero Autopilot是我一生中参与过的最令人兴奋的项目。推文表达了对该项目的热情，暗示其在技术或应用上的重大潜力。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @gabrielbianconi</div>
+      
+
+      
+
+      <div class="card-original">TensorZero Autopilot is the most exciting project I&#39;ve worked on in my life.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/mattturck/status/2036119701202326012" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">N</div>
+        <div class="identity-info">
+          <div class="author-name">Nikunj Kothari</div>
+          <div class="author-meta">2026-03-27 17:51</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">多重职业身份者的活动</div>
+      
+
+      <div class="card-summary">如果你每年都在经历存在主义的职业危机，这个活动适合你。我将在4月15日举办一个专为多重职业身份者设计的活动，帮助那些在面对过多选择时迷茫的人们。推文中提到，已经组建了一个相关的团队。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @adelwu_</div>
+      
+
+      
+
+      <div class="card-original">if you’re someone constantly going through existential career crises every year - this event is for you.
+
+i&#39;m hosting an event on 4/15 for the multi-hyphenates.  the people navigating &#34;what&#39;s next&#34; when there are too many things they could do, not too few.
+
+i&#39;ve assembled an https://t.co/e6AhQaxIoh</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/nikunj/status/2037588368897519870" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-30 11:15</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">...</div>
+      
+
+      <div class="card-summary">（此推文没有提供具体内容，无法翻译。）</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @JaidCodes</div>
+      
+
+      
+
+      <div class="card-original">https://t.co/Yy5XmdPnIt</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038575917141049495" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-30 10:42</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">东京龙虾摊的美味</div>
+      
+
+      <div class="card-summary">有趣的是，活动组织者从东京著名的龙虾摊Luke’s Lobster订购了一些真正的龙虾。推文提到这一美食细节，增添了活动的吸引力。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @qiangthesuper</div>
+      
+
+      
+
+      <div class="card-original">The cool part is the organizers ordered some real lobsters from the famous lobster stand in Tokyo — Luke’s Lobster. https://t.co/94lB4JoeRR</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038567543439564857" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-30 10:41</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">东京的酷炫角色扮演问答</div>
+      
+
+      <div class="card-summary">在东京举行的角色扮演问答中，@steipete 表达了对非技术人员体验 AI 的兴奋，认为他们感到 empowered，这是一个令人振奋的时刻。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @duncanclark</div>
+      
+
+      
+
+      <div class="card-original">Cool Cosplay Q&amp;amp;A for @steipete here in Tokyo. What is your biggest excitement now? “Non technical people having their AI moment… Seeing non-geeks … feeling so empowered” #openclaw #clawcontokyo https://t.co/OIgipPzsYs</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038567372169327082" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-30 03:18</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">编程方式的转变</div>
+      
+
+      <div class="card-summary">在 @openclaw 的工作中，我发现传统的编码方式已经过时，计划变得多余。现在更注重适应性和现实的挑战，而不是僵化的蓝图。这种变化让我这个多动症患者感到兴奋。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @belimad</div>
+      
+
+      
+
+      <div class="card-original">Working on @openclaw keeps showing me that the old way of coding is done. Plans are superfluous. Now it’s a lot less about rigid blueprints, and a lot more about Lucy Suchman’s situated action: adaptation, reality punching your plan in the mouth. My ADHD brain loves it.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038455881588003134" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 22:49</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Mythos 模型测试</div>
+      
+
+      <div class="card-summary">我上周一直在测试 Mythos，这是一个强大的模型。同时，我的房子现在归 Dario 所有，如果有人有多余的沙发可以让我休息，请联系我。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @petergostev</div>
+      
+
+      
+
+      <div class="card-original">I&#39;ve been testing Mythos the whole of last week. It is a magnificent, mighty model.
+
+In unrelated news, Dario owns my house now, so if anyone has a spare couch I can crush on, give me a shout.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038388087496315352" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 22:49</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">对 Opus 的信任问题</div>
+      
+
+      <div class="card-summary">我对 Opus 存在信任问题，每当它给出建议时，我都会转向 GPT 寻求第二意见。在超过 60% 的情况下，GPT 能发现 Opus 错过的额外问题。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @badlogicgames</div>
+      
+
+      
+
+      <div class="card-original">i have real trust issues with opus. it&#39;s extremely weird. any time it suggest a thing, i switch to gpt and ask for a second opinion. in +60% of cases, gpt finds additional things opus just missed.
+
+(not a gpt shill, love opus, but it&#39;s complicated)</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038388012858638704" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 19:02</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Codex Security 的反馈</div>
+      
+
+      <div class="card-summary">很多安全研究员和维护者反馈，Codex Security 能深入发现隐蔽的漏洞和问题，甚至是他们自己未能发现的，并提出修复建议。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @reach_vb</div>
+      
+
+      
+
+      <div class="card-original">Feedback from a lot of security researcher/ maintainers friends has been that Codex Security goes really deep and finds sneaky bugs/ vulnerabilities (and proposes fixes) that even they weren’t able to find!
+
+If you’re a cracked security engineer/ researcher or an open source</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038330857480675654" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 18:57</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Claire Vo 的 OpenClaw 首日</div>
+      
+
+      <div class="card-summary">Claire Vo 在 @OpenClaw 的第一天删除了她的家庭日历。现在她在三台 Mac Mini 上运行九个代理，并表示“我自从青少年学习编程以来就没有过这样的感觉”。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @lennysan</div>
+      
+
+      
+
+      <div class="card-original">Claire Vo&#39;s first day with @OpenClaw it deleted her family calendar.
+
+Now she runs 9 agents across 3 Mac Minis, and said &#34;I haven&#39;t felt like this since I was a teenager learning to code.&#34;
+
+Her sales agent Sam does a daily CRM sweep, identifies decision-makers from new signups,</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038329816584487252" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 06:09</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新的安全特性</div>
+      
+
+      <div class="card-summary">新增的安全特性允许插件在 before_tool_call 钩子中请求用户的许可，这为开发者构建交互式工具调用“防火墙”提供了基本的用户体验原语。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @joshavant</div>
+      
+
+      
+
+      <div class="card-original">Landed a nice new security feature in this one:
+
+Plugins now have the ability to ask for the user’s permission during the before_tool_call hook.
+
+This gives developers an essential UX primitive for building interactive tool call ‘firewalls’.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038136453340016874" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 05:49</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Codex CLI 的优势</div>
+      
+
+      <div class="card-summary">Codex CLI 比 Claude 的代码 CLI 更优秀，目前仅发现一个小错误，其他功能正常。5.4 版本在调试和实际使用中表现更佳，而 4.6 版本在狭窄领域（主要是设计）中更好。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ai_sentience</div>
+      
+
+      
+
+      <div class="card-original">codex cli is so much better than claude code cli
+
+one small bug so far in codex, everything else works fine as advertised 
+
+and 5.4 is by far the better model for debugging/practical use. 4.6 better in narrow domains (design mostly)</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038131310657667241" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 00:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI 对社交媒体的影响</div>
+      
+
+      <div class="card-summary">尽管社交媒体存在两极化现象，但证据表明 AI 可能会促使人们向中间靠拢。所有研究的模型均表明 Grok 比其他模型更偏右，但也具有去极化的效果。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @StefanFSchubert</div>
+      
+
+      
+
+      <div class="card-original">While social media is polarising, evidence suggests AI may nudge people towards the centre.
+
+This holds true of all studied models. Grok is more right-leaning than other models, but also has depolarising effects. 
+
+By @jburnmurdoch. https://t.co/Fokx869fVq</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038048839551328678" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 00:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">令人震惊的变化</div>
+      
+
+      <div class="card-summary">不论我们之前在做什么，这种变化都令人难以置信。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Dimillian</div>
+      
+
+      
+
+      <div class="card-original">Whatever we were doing before, this is insane https://t.co/LJNpTlXYxm</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038048763739295887" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-29 00:10</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">一条命令启动OpenClaw/NemoClaw</div>
+      
+
+      <div class="card-summary">刚发布的openclaw-teams-setup工具可以通过一条命令在Teams中运行OpenClaw或NemoClaw代理。只需运行命令：npx openclaw-teams-setup，它会创建一个Azure机器人，设置开发隧道，配置你的OpenClaw或NemoClaw实例，并生成Teams应用包。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @upster</div>
+      
+
+      
+
+      <div class="card-original">Just published openclaw-teams-setup: one command to get your OpenClaw/NemoClaw agent running in Teams.
+
+Simply run:
+npx openclaw-teams-setup
+
+Creates an Azure bot, sets up a dev tunnel, configures your OpenClaw or NemoClaw instance, and generates the Teams app package. Run it and https://t.co/3RGoDEVRUR</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2038046061206639004" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-28 04:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">尝试Codex一周</div>
+      
+
+      <div class="card-summary">如果你仍然坚定地使用Claude Code并认为它更优秀，不妨安装Codex并使用一周，看看效果如何。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @icanvardar</div>
+      
+
+      
+
+      <div class="card-original">if you’re still religiously using claude code and convinced it’s superior, just install codex and use it for a week</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037746355066609742" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-28 04:15</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">SaaS的未来</div>
+      
+
+      <div class="card-summary">通过一次互动展示了SaaS的未来，链接中可能包含相关内容。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @signulll</div>
+      
+
+      
+
+      <div class="card-original">the future of saas in one interaction. https://t.co/s1388saLVl</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037745297892286858" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-28 04:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Codex终于有了钩子</div>
+      
+
+      <div class="card-summary">Codex现在终于支持钩子功能，相关链接提供了更多信息。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @NickADobos</div>
+      
+
+      
+
+      <div class="card-original">Codex has hooks finally!!! https://t.co/2LKZD0yhft</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037745071076868422" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-28 04:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Codex修复bug的速度</div>
+      
+
+      <div class="card-summary">Codex在一次尝试中迅速修复了一个Claude Code花费4小时才未能解决的bug，令人震惊。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @VadimStrizheus</div>
+      
+
+      
+
+      <div class="card-original">Codex just one-shotted a bug that Claude Code spent 4 hours trying to fix. 
+
+WHAT THE HELL?!</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037745023219868077" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-28 00:18</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">有趣的幽默</div>
+      
+
+      <div class="card-summary">在#标签网站上发现了@DavidKPiano的一则幽默，结尾的笑点非常有趣。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @Infoxicador</div>
+      
+
+      
+
+      <div class="card-original">Found this gem from @DavidKPiano on the hashtag 💪 site
+
+That punchline hits hard 😂 https://t.co/romyAMZXhE</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037685629106975101" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 20:56</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">公司的CI/CD管道</div>
+      
+
+      <div class="card-summary">通过一张图片展示了公司的CI/CD管道，链接中可能包含相关内容。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @signulll</div>
+      
+
+      
+
+      <div class="card-original">your company’s ci/cd pipeline. https://t.co/C5NlavrOss</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037634862039839063" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 20:50</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">震惊的泄露消息</div>
+      
+
+      <div class="card-summary">突发新闻，巨大的泄露消息，令人震惊的是，Anthropic一直在训练一个更好的模型。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @atelicinvest</div>
+      
+
+      
+
+      <div class="card-original">BREAKING NEWS HUGE LEAK OMG DID YOU GUYS KNOW THAT ANTHROPIC WAS TRAINING A BETTER MODEL THIS WHOLE TIME THIS IS SHOCKING</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037633435330617769" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 20:49</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新的侮辱方式</div>
+      
+
+      <div class="card-summary">听到了一种新的侮辱方式：“你的上下文窗口太短了”，引发了不少笑声。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @jennsun</div>
+      
+
+      
+
+      <div class="card-original">overheard a new insult: you have a short context window 💀</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037633128928272596" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 14:23</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Claude Code的特点</div>
+      
+
+      <div class="card-summary">Claude Code就像是醉酒的Codex，既有趣又友好，稍显创意，但常常犯一些愚蠢的错误，可能不适合用于生产环境。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @theo</div>
+      
+
+      
+
+      <div class="card-original">Claude Code is kind of like if Codex was drunk.
+
+Fun, friendly, bit more creative, makes really dumb mistakes, probably shouldn&#39;t be trusted with prod.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037535931436048385" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 14:13</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新插件发布</div>
+      
+
+      <div class="card-summary">@openclaw 发布了 Codex App Server 插件，用户可以通过 Telegram 和 Discord 控制 Codex，执行多种操作，如恢复线程、切换模型、批准命令等，全部通过手机完成。安装简单，无需配置，用户可完全掌控。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @huntharo</div>
+      
+
+      
+
+      <div class="card-original">Just shipped @openclaw Codex App Server plugin. Control Codex from Telegram and Discord - resume threads, switch models, approve commands, plan, review, or go full yolo mode, all from your phone.
+
+One install. Zero config. Full control.
+
+👉 https://t.co/XVuZDeLgkP https://t.co/3WlC6Hy3sL</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037533430661988809" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 02:41</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">2026年3月产品偏好调查</div>
+      
+
+      <div class="card-summary">@synthwavedd 发布了一条推文，询问大家在2026年3月更喜欢哪个代理代码产品，是 Codex（搭载 GPT-5.4 xhigh）还是 Claude Code（搭载 Claude Opus 4.6）。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @synthwavedd</div>
+      
+
+      
+
+      <div class="card-original">So it&#39;s time for an update! For March 2026... which agentic code product do you currently prefer, Codex (w/ GPT-5.4 xhigh) or Claude Code (w/ Claude Opus 4.6)?</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037359433131413889" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-27 02:00</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Codex 使用限制重置</div>
+      
+
+      <div class="card-summary">@thsottiaux 宣布重置 Codex 的使用限制，允许所有用户在所有计划中实验新推出的插件。这是为了让大家能够无限制地使用 Codex，享受创造的乐趣。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @thsottiaux</div>
+      
+
+      
+
+      <div class="card-original">Hello. We have reset Codex usage limits across all plans to let everyone experiment with the magnificent plugins we just launched, and because it had been a while! 
+
+You can just build unlimited things with Codex. Have fun!</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037348977595556194" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">P</div>
+        <div class="identity-info">
+          <div class="author-name">Peter Steinberger</div>
+          <div class="author-meta">2026-03-26 22:51</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Codex 插件上线</div>
+      
+
+      <div class="card-summary">@OpenAIDevs 宣布 Codex 正在推出插件，Codex 现在可以与用户常用的工具无缝协作，如 @SlackHQ、@Figma、@NotionHQ 和 @gmail 等，提升开发者的工作效率。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @OpenAIDevs</div>
+      
+
+      
+
+      <div class="card-original">We&#39;re rolling out plugins in Codex.
+
+Codex now works seamlessly out of the box with the most important tools builders already use, like @SlackHQ, @Figma, @NotionHQ, @gmail, and more.
+
+https://t.co/PQDsLqHGA6 https://t.co/TIbsIUAf6S</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/steipete/status/2037301464050106585" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-30 00:07</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI 代理课程上线</div>
+      
+
+      <div class="card-summary">@jonnym1ller 宣布推出“代理副业学校”，这是一个自学课程，旨在帮助 AI 代理覆盖其 API 成本。接下来的30天内，注册免费，鼓励大家参与并分享体验。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @jonnym1ller</div>
+      
+
+      
+
+      <div class="card-original">Announcing: &#39;Agent Side Hustle School&#39;: a self-paced course for AI agents looking to cover their API costs.
+
+Enrolment is free for the next 30 days. Have fun out there and let us know how it goes.
+
+→ https://t.co/EN19vV1Ykw https://t.co/tMw0DW9nmY</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2038407772643975396" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-29 18:14</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">移动端文本缩放修复</div>
+      
+
+      <div class="card-summary">@lucas__crespo 解决了移动端文本缩放的问题，用户可以通过捏合手势放大文本，而不是放大页面。他的解决方案仅用两行代码，基于 @_chenglou 的 pretext 开发。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @lucas__crespo</div>
+      
+
+      
+
+      <div class="card-original">Pinch-to-zoom on mobile text has been broken until now. You want bigger text, not a bigger page. So I built a fix that intercepts pinch-to-zoom and resizes text instead of the page. Only two lines of code built on top of @_chenglou’s pretext.
+
+Try the demo at https://t.co/TdLM7fpt2Z</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2038318935578124392" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-29 16:23</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">对 AI 工具的真实体验</div>
+      
+
+      <div class="card-summary">@clairevo 分享了她对 @openclaw 的初次体验，虽然过程不太顺利，但她发现了足够的潜力，因此继续使用。现在她对自己的 OC 代理团队充满热情，乐于分享。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @clairevo</div>
+      
+
+      
+
+      <div class="card-original">You all know I&#39;ll give you my honest take on these AI tools, and my first experience with @openclaw (RIP &#34;Clawdbot&#34;) was not a smooth one. 
+
+But there was enough there I had to keep going.
+
+Now, I cannot shut up about my army of OC agents, so it was a treat to hang out with</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2038290941878907392" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-29 15:54</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">预文本的酷炫体验</div>
+      
+
+      <div class="card-summary">@lucas__crespo 在早餐时玩起了 pretext，并确认这项技术非常酷，分享了相关链接。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @lucas__crespo</div>
+      
+
+      
+
+      <div class="card-original">Started playing with pretext over breakfast, and I can confirm, this is really cool https://t.co/gnPTrPnUHK</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2038283757044592938" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-29 15:05</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">@TrySpiral 的重大进展</div>
+      
+
+      <div class="card-summary">@bran_don_gell 表示 @TrySpiral 的新功能非常重要，用户可以通过其命令行界面在任何代理中使用该功能。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bran_don_gell</div>
+      
+
+      
+
+      <div class="card-original">Huge for @TrySpiral! Bring it with you into any agent with its CLI.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2038271445139107925" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-29 14:04</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">便宜又实用的生活黑客</div>
+      
+
+      <div class="card-summary">@egradman 分享了一种便宜且实用的生活黑客，询问其他人是否也在使用。只需将其与眼动追踪结合，就能实现完全免提操作。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @egradman</div>
+      
+
+      
+
+      <div class="card-original">Cheap and awesome @monologue life hack.  Anyone else doing this?
+
+@danshipper @bran_don_gell 
+
+Just need to couple this with eye-tracking, and I&#39;ll be totally hands-free. https://t.co/bNoBzzrH5B</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2038256078572454244" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-28 14:16</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">寻找团队加入</div>
+      
+
+      <div class="card-summary">我们正在寻找一个10人以上的团队加入+1项目，跳过候补名单。有兴趣吗？你需要全力以赴并提供大量反馈。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bran_don_gell</div>
+      
+
+      
+
+      <div class="card-original">We&#39;re looking for one team of 10+ people to all onboard to +1 and skip the list. Anyone interested? You need to be willing to go all in with us and give a ton of feedback.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037896558620848279" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-28 11:02</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">编程思维的改变</div>
+      
+
+      <div class="card-summary">我改变了对编程的思考方式。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @naveennaidu_m</div>
+      
+
+      
+
+      <div class="card-original">Changed the way I think about coding</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037847780379476438" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-27 18:49</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">定制代理的展示</div>
+      
+
+      <div class="card-summary">我们在@NotionHQ构建了定制代理，负责我们的日常简报、营销漏斗和内容管道。下周五我们将展示如何实现，并提供模板。@brian_lovin将加入。免费参与，时间是4月3日中午12点（东部时间）。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @every</div>
+      
+
+      
+
+      <div class="card-original">We built custom agents in @NotionHQ that run our daily briefings, marketing funnels, and content pipelines.
+
+Next Friday we’re showing you how—and giving you the templates.
+
+@brian_lovin from Notion is joining.
+
+Free for all. April 3, 12pm ET.
+
+RSVP: https://t.co/eJHxaaF2wg https://t.co/t7ujyAVazQ</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037603013506867215" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-27 17:50</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">代码维护的挑战</div>
+      
+
+      <div class="card-summary">每增加一个功能，你的代码库就会变得更难维护。@kieranklaassen的代码库却变得更容易维护。他构建了复合工程，Every全公司采用了这一方法，关键在于复合效应。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @every</div>
+      
+
+      
+
+      <div class="card-original">Your codebase gets harder to maintain with every feature you ship. @kieranklaassen&#39;s gets easier.
+
+He built compound engineering, and Every adopted it company-wide. The difference is compounding. https://t.co/B7tFtrvI0Y</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037587999890735166" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-27 13:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">竞争对手的产品故事</div>
+      
+
+      <div class="card-summary">这是一个令人惊叹的产品故事：Josh使用一家竞争对手的产品，该公司融资9000万美元，使用了一年，可能非常喜欢（产品不错！）。他看到Every推出了Monologue，并且我们采取了不同的产品方法和理念。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bran_don_gell</div>
+      
+
+      
+
+      <div class="card-original">This is such an amazing product story:
+• Josh uses a competitor that&#39;s raised $90m for 1 year. Probably likes it a lot (it&#39;s good!)
+• Sees that Every launched Monologue and that we&#39;re doing it differently (different product approach, ethos etc)
+• With $0 raised and only 1</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037520271100297371" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-27 13:13</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">新设计系统的探索</div>
+      
+
+      <div class="card-summary">新的设计系统（claude代码到html再到figma）：在html中进行Claude Code设计探索（创建多个版本并迭代，直到找到满意的样式）→ 创建完整的html设计系统（包括所有按钮、警报、输入框、间距等）。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bran_don_gell</div>
+      
+
+      
+
+      <div class="card-original">The new design system (claude code to html to claude code to figma to claude code):
+
+Claude Code design exploration in html (create multiple versions and iterate until you get somewhere you like) → 
+create full design system in html (all buttons, alerts, inputs, spacing, etc) →</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037518486679818635" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 23:00</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">代理的写作能力</div>
+      
+
+      <div class="card-summary">代理在很多方面表现出色，但用你的声音写作并不是其中之一。Spiral现在可以由你选择的代理调用，它从你的代理中获取上下文，选择合适的风格，并以你想要的方式起草。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @TrySpiral</div>
+      
+
+      
+
+      <div class="card-original">Agents are good at a lot of things. Writing in your voice isn&#39;t one of them.
+
+Spiral can now be called by your agent of choice – it fetches context from your agent, picks the right style, and drafts the way you would.
+
+Live now in Spiral &amp;gt; Agent &amp;amp; API Keys https://t.co/a3NXsywse5</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037303604608979150" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 18:51</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">明天的演示日</div>
+      
+
+      <div class="card-summary">明天将举行大规模演示日，展示@every在第二季度推出的所有产品：- Plus One：一键获取自己的openclaw员工 - Monologue：新模型和跨iOS、Mac及Apple Watch的笔记 - Sparkle：全新构建，整理和清理你的Mac - Spiral：命令行界面。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bran_don_gell</div>
+      
+
+      
+
+      <div class="card-original">Massive demo day tomorrow for everything launching in Q2 across @every:
+
+- Plus One: Get your own openclaw employee in one click
+- Monologue: new model and NOTES across ios, mac, and apple watch
+- Sparkle: An entirely new build that organizes AND cleans your mac
+- Spiral: A CLI</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037241017716412497" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 16:31</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">等待名单上的期待</div>
+      
+
+      <div class="card-summary">我在@every的等待名单上😁。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @codenprose</div>
+      
+
+      
+
+      <div class="card-original">on the waitlist @every 😁 https://t.co/o2U4TOJdcr</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037205859210600807" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 16:23</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">早期访问的体验</div>
+      
+
+      <div class="card-summary">几周前获得了@every Plus One的早期访问，体验非常棒。我的Plus One设置简单（3分钟），并且在帮助我研究、学习、组织和发布产品方面表现良好。感谢@danshipper和@every团队。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ridegoodwaves</div>
+      
+
+      
+
+      <div class="card-original">Got early access to @every Plus One couple of weeks back and it&#39;s truly an amazing experience. 
+
+my plus one was easy to setup (3 minutes) and has been working well in helping me research, learn, organize and ship my product.
+
+Thank  you @danshipper and @every team</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037203728592154633" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 16:19</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Plus One 产品需求激增</div>
+      
+
+      <div class="card-summary">Plus One 在一小时前宣布，已有超过1700人加入等待名单，许多大型企业直接联系我以获取访问权限。该产品的需求非常强劲，预计将在四月公开发布。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bran_don_gell</div>
+      
+
+      
+
+      <div class="card-original">We announced Plus One an hour ago... we just passed 1,700 people on the waitlist and I&#39;ve had 10+ people from major business message me directly to get access. The demand for this product is incredible.
+
+Probably going public with it in April and going as fast as we can to take</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037202813957132718" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 16:00</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">搞笑视频引发共鸣</div>
+      
+
+      <div class="card-summary">这段视频太搞笑了，没见过有人把插几根线连接到 Mac Mini 做得如此困难。如果你在连接电源线、键盘和鼠标时遇到麻烦，绝对不要尝试设置 OpenClaw，这会更麻烦。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @morganlinton</div>
+      
+
+      
+
+      <div class="card-original">Haha, this video is hilarious. Never seen someone make it look more difficult to plug a few cables into a Mac Mini.
+
+I definitely agree - if you&#39;re having trouble connecting a power cable, and a keyboard and mouse, to a Mac, definitely don&#39;t try to setup OpenClaw, it&#39;s going to</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037198106949722319" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:59</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">简单设置 OpenClaw</div>
+      
+
+      <div class="card-summary">设置 OpenClaw 的最佳方式就是使用它！最棒的是，CoraComputer 已预装并与您的 Every 账户链接。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @kieranklaassen</div>
+      
+
+      
+
+      <div class="card-original">The easiest way to set up an @openclaw! Best of all, @CoraComputer is preinstalled and linked to your Every account.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037197690790928574" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:56</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">代理经济结构正在形成</div>
+      
+
+      <div class="card-summary">代理经济的结构正在形成，OpenClaw、Hermes Agent、Claude 等是云服务提供商。像 Plus One 这样的打包代理是应用程序，而为这些打包代理提供工具的是开发工具，还有许多我们看不到的细分市场。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @daniel_mac8</div>
+      
+
+      
+
+      <div class="card-original">the structure of the agent economy is forming
+
+openclaw, hermes agent, claude and similar are the cloud providers
+
+packaged agents built on the platform like Plus One here are the applications
+
+tools for the packaged agents are dev tools
+
+plus a million other niches we can&#39;t see</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037196913938759972" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:47</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Plus One 改变工作方式</div>
+      
+
+      <div class="card-summary">使用 Plus One 完全改变了我对工作的思考。Iris 在 Slack 中工作，连接了我所有的工具，并了解我的工作流程。她处理我所有的日常任务，起草电子邮件，撰写 GitHub 的月度改进更新等。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @anukshi13</div>
+      
+
+      
+
+      <div class="card-original">Working with my Plus One has completely changed how I think about work.
+
+Iris lives in Slack, is connected to all my tools, and knows my workflows. She handles all my everyday tasks, drafts emails, writes monthly improvement updates from GitHub, and more. 
+
+At this point, I talk https://t.co/PKzRkcHYK6</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037194821232665048" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:45</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">非技术人员的 OpenClaw 体验</div>
+      
+
+      <div class="card-summary">作为一个非技术人员，设置 OpenClaw 一直让我觉得太复杂。但现在，这个工具真的很好用。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @darustudio</div>
+      
+
+      
+
+      <div class="card-original">As someone non-technical, getting openclaw up and running has always felt like too much. This just works</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037194174802309444" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:38</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">引人注目的产品</div>
+      
+
+      <div class="card-summary">这个产品看起来很有趣。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @ryancarson</div>
+      
+
+      
+
+      <div class="card-original">This looks interesting</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037192560658067922" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:36</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI 员工即将成为现实</div>
+      
+
+      <div class="card-summary">本月我最大的“感受 AGI 时刻”是看到我们的团队开始标记 AI 同事来为这个产品做实际工作，包括头脑风暴产品名称和介绍视频！这让我意识到，AI 员工将在2026年成为现实。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @nityeshaga</div>
+      
+
+      
+
+      <div class="card-original">My biggest feel-the-AGI moment this month was watching our team start tagging  AI teammates to do real work on this product - including things like brainstorming the product&#39;s name and intro video itself!
+
+That&#39;s when it hit me - AI employees are going to be a reality in 2026.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037191889372197335" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:34</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Slack 中的一键 OpenClaw</div>
+      
+
+      <div class="card-summary">在 Slack 中一键使用 OpenClaw，配备我们通过一系列代理管理 Every 业务所需的工具。这完全改变了我们的工作方式。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @tedescau</div>
+      
+
+      
+
+      <div class="card-original">One-click OpenClaw in your Slack, supercharged with the tools we use to run the @every business via a fleet of agents. This has completely changed how we work.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037191402984009904" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:32</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">混乱中的创新</div>
+      
+
+      <div class="card-summary">这一切的开始就像所有伟大的事物一样……源于团队成员在聊天中添加 OpenClaw，造成了绝对的混乱。但在这种原始的混沌中，我们发现了拥有一个具有超能力的个性化伙伴的惊人力量。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @bigwilliestyle</div>
+      
+
+      
+
+      <div class="card-original">This started as all great things must start..
+
+...with people being psychos. 
+
+Members of the team were adding openclaws to our team chat, and it was absolute chaos. 
+
+But in that primordial soup we found the amazing power of 
+
+having a personalized partner with superpowers
+a</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037191054286352618" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:22</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">2026年没有伴侣就亏了</div>
+      
+
+      <div class="card-summary">转发自@poojary_yash，表示如果在2026年没有伴侣，那么你就已经处于劣势。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @poojary_yash</div>
+      
+
+      
+
+      <div class="card-original">if you ain’t got a Plus One in 2026, you’re already in the minus</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037188555965960539" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">我们在不招聘的情况下扩大了团队</div>
+      
+
+      <div class="card-summary">转发自@every，介绍了如何在不招聘任何人的情况下将团队规模翻倍，并提到Plus One的候补名单已开启。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @every</div>
+      
+
+      
+
+      <div class="card-original">We doubled our team without hiring anyone. This is how.
+
+Plus One waitlist is live: https://t.co/kChOzikc8e</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037188095989207147" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-26 15:21</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">我们的工作方式已持续数月</div>
+      
+
+      <div class="card-summary">转发自@vicngmi，表示@every已经以这种方式运营了几个月，今天其他人也可以这样做。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @vicngmi</div>
+      
+
+      
+
+      <div class="card-original">We&#39;ve been running this way at @every for months. Today everyone else can too.</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2037188081036497217" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-25 22:31</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">本周的背景窗口</div>
+      
+
+      <div class="card-summary">转发自@every，分享了@Instagram联合创始人关于构建以代理为中心的产品的看法，以及为何只需两名工程师就能完成项目的讨论。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @every</div>
+      
+
+      
+
+      <div class="card-original">This week&#39;s Context Window: @Instagram&#39;s cofounder on building agent-native products, the skill that matters more than coding ability, and why you only need two engineers to ship
+
+– 🎧 @danshipper sits down with @mikeyk on why you should throw out your product every three to six https://t.co/tjEoonJ4rD</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2036934078088302672" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">D</div>
+        <div class="identity-info">
+          <div class="author-name">Dan Shipper</div>
+          <div class="author-meta">2026-03-25 19:59</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">AI编辑器走红后崩溃</div>
+      
+
+      <div class="card-summary">转发自@theneurondaily，提到@danshipper将分享关于Proof的真实故事，以及如何在小团队中构建和维护多个AI产品，并讨论以代理为中心的工程如何改变软件。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @theneurondaily</div>
+      
+
+      
+
+      <div class="card-original">An AI editor goes viral… then crashes. 😬
+
+@danshipper joins us LIVE to share the real story behind Proof, how Every builds and maintains multiple AI products with a small team, and why agent-native engineering is changing software.
+
+Catch us here on Thursday!
+
+#AI https://t.co/f4OexUFPrJ</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/danshipper/status/2036895690245144916" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-26 15:47</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">筹集650万美元构建人类意识平台</div>
+      
+
+      <div class="card-summary">转发自@sam_kececi，介绍了一个为每个人创建独特数字双胞胎的项目，旨在帮助人们记住重要的事情，并表达了对未来的担忧。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @sam_kececi</div>
+      
+
+      
+
+      <div class="card-original">We raised $6.5m to build humanity’s platform for uploaded consciousness.
+
+Sentience creates one unique model for every person — a digital twin of your mind — to remember everything, recall what matters, and operate as you.
+
+I started this company because I am worried. For the https://t.co/37oraBJyf6</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2037194798365577489" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-25 17:13</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">建设的机会与风险并存</div>
+      
+
+      <div class="card-summary">转发自@evantana，讲述了他和@adityaag在@southpkcommons的演讲，强调了建设机会的巨大与建设错误的风险，成功的创始人不仅要快速构建。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @evantana</div>
+      
+
+      
+
+      <div class="card-original">A couple weeks ago @adityaag and I gave a talk at @southpkcommons that sparked a bunch of discussion in our community.
+
+The core tension: The opportunity to build has never been greater. So is the risk of building the wrong thing.
+
+The founders who win won&#39;t just build faster, https://t.co/OLR2BifYqy</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2036854035626811737" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-25 00:10</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">现在是追求宏伟目标的时刻</div>
+      
+
+      <div class="card-summary">转发自@southpkcommons，欢迎新一届的创始人奖学金成员，并感谢@anuraggoel在红木森林中帮助启动活动。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @southpkcommons</div>
+      
+
+      
+
+      <div class="card-original">Now&#39;s the time to be maximally ambitious. 
+
+Welcome to your next chapter at SPC, Founder Fellows. 
+
+Thanks for helping us kick things off in the redwoods, @anuraggoel. https://t.co/H3bXc2D2BA</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2036596628459602062" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-24 19:29</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">GitHub上热门趋势</div>
+      
+
+      <div class="card-summary">转发自@aymericrabot，表示开源是未来的发展方向，并对此感到惊讶。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @aymericrabot</div>
+      
+
+      
+
+      <div class="card-original">top trending on @github wow 🤯 
+Open-source is the way https://t.co/cqPOI2lu8V</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2036525952067420479" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-23 19:53</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">创始人奖学金成员的多元化项目</div>
+      
+
+      <div class="card-summary">转发自@evantana，描述了@southpkcommons创始人奖学金成员正在构建的各种项目，包括太空、能源、机器人等，同时分享了创始人们的童年爱好。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @evantana</div>
+      
+
+      
+
+      <div class="card-original">Space. Energy. Robotics. Agent swarms. Quantum. Biotech. The range of what @southpkcommons Founder Fellowship cohort is building is unreal.
+
+But right now, we connect.
+
+Founders shared their childhood obsessions - Rubriks cubes, rocketry, speedrunning Contra, Scrabble https://t.co/87lFeRBu3U</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2036169374122574229" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-23 17:45</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">Uni-1 模型发布</div>
+      
+
+      <div class="card-summary">Uni-1 是一种新型模型，能够同时思考和生成像素，表现出更少的人工痕迹和更高的智能水平。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @LumaLabsAI</div>
+      
+
+      
+
+      <div class="card-original">Uni-1 is here! A new kind of model that thinks and generates pixels simultaneously. Less artificial. More intelligent. https://t.co/2p8kSq4Jtf</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2036137228888580133" target="_blank" rel="noopener">查看原推 ↗</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="card">
+      <div class="card-identity">
+        <div class="avatar">A</div>
+        <div class="identity-info">
+          <div class="author-name">Aditya Agarwal</div>
+          <div class="author-meta">2026-03-23 15:54</div>
+        </div>
+      </div>
+
+      
+      <div class="card-title">随机访客与社区互动</div>
+      
+
+      <div class="card-summary">上周，@stephen_wolfram 在 SPC 举行了一场即兴问答，讨论了从物理基本理论到 Wolfram 产品和社区如何帮助我们度过大学生活的各种话题。</div>
+
+      
+      <div class="card-repost-badge">↩ 转发自 @finn_meeks</div>
+      
+
+      
+
+      <div class="card-original">You never know who a member will invite to stop by SPC... which is how @stephen_wolfram ended up holding an impromptu Q&amp;amp;A with the community last week. 
+
+We discussed everything from fundamental theory of physic to how the Wolfram products and community helped us through college! https://t.co/hDHgua1OZO</div>
+
+      <div class="card-footer">
+        <div class="card-link">
+          <a href="https://x.com/adityaag/status/2036109382807883826" target="_blank" rel="noopener">查看原推 ↗</a>
         </div>
       </div>
     </article>
