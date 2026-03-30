@@ -73,11 +73,12 @@ TRANSLATE_BATCH_SIZE = int(os.environ.get("TRANSLATE_BATCH_SIZE", "10"))
 # 批量翻译 prompt — 一次 API 调用处理多条推文
 BATCH_PROMPT_TEMPLATE = """\
 将以下 {n} 条推文分别翻译成中文。
+部分推文含有引用或转发内容，请结合全文理解完整信息。
 
 格式要求（严格按编号顺序输出，每条用 [编号] 分隔，不添加任何额外文字）：
 [1]
 TITLE: 一句话核心观点（不超过 20 字）
-SUMMARY: 中文翻译（保留原意，不超过 100 字）
+SUMMARY: 中文翻译（保留原意，如有引用请概括完整背景，不超过 150 字）
 
 [2]
 TITLE: ...
@@ -85,6 +86,26 @@ SUMMARY: ...
 
 推文原文：
 {tweets}"""
+
+
+def _build_tweet_prompt_text(tweet: dict) -> str:
+    """
+    为 LLM 翻译构建上下文感知的文本。
+    若推文包含引用/转发内容，将其纳入提示词以生成更准确的翻译。
+    """
+    text = tweet.get("text", "")
+    context_text = tweet.get("context_text", "")
+    context_author = tweet.get("context_author", "")
+    is_repost = tweet.get("is_repost", False)
+
+    if not context_text:
+        return text
+
+    author_note = f"@{context_author}" if context_author else "某用户"
+    if is_repost:
+        return f"（转发自 {author_note}）\n{text}"
+    else:
+        return f"（评论/引用了 {author_note} 的推文）\n原帖：{context_text}\n回应：{text}"
 
 
 # ---------------------------------------------------------------------------
@@ -127,6 +148,10 @@ class TweetEntry:
     created_at: str
     title: str = ""
     summary: str = ""
+    context_text: str = ""    # 被引用/转发推文的内容
+    context_author: str = ""  # 被引用/转发推文的作者 handle
+    context_url: str = ""     # 被引用推文的链接
+    is_repost: bool = False   # True 表示纯转推（无评论）
 
 
 # ---------------------------------------------------------------------------
@@ -190,10 +215,16 @@ def _parse_twitter_date(date_str: str) -> str:
 
 def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
     """
-    抓取指定 Twitter 用户的最近推文（排除转推和回复）。
+    抓取指定 Twitter 用户的最近推文（排除无法解析的转推和回复）。
+    对于含引用推文的帖子，提取被引用内容作为上下文（context_text/context_author/context_url）。
+    对于转推（RT @），提取被转推的原始内容，以便展示完整信息。
     任何错误都返回空列表，不抛出异常（单人失败不影响整体流程）。
 
-    返回格式：[{"id": str, "text": str, "created_at": str, "url": str}]
+    返回格式：[{
+        "id": str, "text": str, "created_at": str, "url": str,
+        "context_text": str, "context_author": str, "context_url": str,
+        "is_repost": bool,
+    }]
     """
     try:
         response = client.get_user_tweets(handle, total=FETCH_TWEETS_PER_USER)
@@ -204,23 +235,47 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
         raw_count = len(response["data"])
         results = []
         skipped_no_text = skipped_no_id = skipped_rt = skipped_reply = 0
+        repost_count = 0
         for item in response["data"]:
             tweet = Tweet(item)
             # tweeterpy's find_nested_key() can return a list when a tweet
-            # contains nested tweet data (e.g. quoted tweets).  Normalise to
-            # a plain string by taking the first element so that downstream
-            # str operations like .startswith() don't raise TypeError.
-            full_text = tweet.full_text
-            if isinstance(full_text, list):
-                full_text = full_text[0] if full_text else None
+            # contains nested tweet data (e.g. quoted tweets).  The first
+            # element is the main tweet text; the second (if present) is the
+            # quoted tweet's text which we capture as context.
+            full_texts = tweet.full_text
+            context_text = ""
+            context_author = ""
+            context_url = ""
+
+            if isinstance(full_texts, list):
+                full_text = full_texts[0] if full_texts else None
+                if len(full_texts) > 1:
+                    context_text = full_texts[1] or ""
+            else:
+                full_text = full_texts
 
             if not full_text:
                 skipped_no_text += 1
                 continue
-            # 排除转推
+
+            # 处理转推 — 提取原始内容和作者，而非直接跳过
+            is_repost = False
             if full_text.startswith("RT @"):
-                skipped_rt += 1
-                continue
+                rt_match = re.match(r"RT @(\w+): (.*)", full_text, re.DOTALL)
+                if rt_match:
+                    rt_handle = rt_match.group(1)
+                    rt_content = rt_match.group(2).rstrip("…").strip()
+                    # 优先使用嵌套数据中的完整文本（避免 RT 截断问题）
+                    if not context_text:
+                        context_text = rt_content
+                    context_author = rt_handle
+                    full_text = context_text  # 用原始内容替换 RT @ 前缀
+                    is_repost = True
+                    repost_count += 1
+                else:
+                    skipped_rt += 1
+                    continue
+
             # 排除回复 — in_reply_to_status_id_str may also be a list
             reply_id = tweet.in_reply_to_status_id_str
             if isinstance(reply_id, list):
@@ -229,20 +284,47 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
                 skipped_reply += 1
                 continue
 
-            tweet_id = tweet.rest_id or tweet.id_str
+            # 提取引用推文的作者（当上下文文本存在但作者未知时）
+            if context_text and not context_author:
+                screen_names = tweet.screen_name
+                if isinstance(screen_names, list) and len(screen_names) > 1:
+                    context_author = screen_names[1]
+
+            # 处理 rest_id / id_str 可能为列表的情况（多层嵌套推文）
+            rest_id_raw = tweet.rest_id
+            if isinstance(rest_id_raw, list):
+                quoted_rest_id = rest_id_raw[1] if len(rest_id_raw) > 1 else None
+                rest_id_val = rest_id_raw[0] if rest_id_raw else None
+            else:
+                quoted_rest_id = None
+                rest_id_val = rest_id_raw
+
+            id_str_raw = tweet.id_str
+            id_str_val = id_str_raw[0] if isinstance(id_str_raw, list) else id_str_raw
+
+            tweet_id = rest_id_val or id_str_val
             if not tweet_id:
                 skipped_no_id += 1
                 continue
+
+            # 构建引用推文的 URL（如有足够信息）
+            if context_text and context_author and not context_url and quoted_rest_id:
+                context_url = f"https://x.com/{context_author}/status/{quoted_rest_id}"
+
             results.append({
                 "id": tweet_id,
                 "text": full_text,
                 "created_at": _parse_twitter_date(tweet.created_at),
                 "url": f"https://x.com/{handle}/status/{tweet_id}",
+                "context_text": context_text,
+                "context_author": context_author,
+                "context_url": context_url,
+                "is_repost": is_repost,
             })
 
         logger.info(
             f"  @{handle}: 原始={raw_count}, 无文本={skipped_no_text}, 无ID={skipped_no_id}, "
-            f"转推={skipped_rt}, 回复={skipped_reply}, 有效={len(results)}"
+            f"转推(含上下文)={repost_count}, 转推(无法解析)={skipped_rt}, 回复={skipped_reply}, 有效={len(results)}"
         )
         return results
     except Exception as e:
@@ -344,7 +426,9 @@ def translate_batch(tweets: list[dict], api_key: str) -> list[dict[str, str]]:
         for t in tweets
     ]
 
-    tweets_block = "\n\n".join(f"[{i + 1}]\n{t['text']}" for i, t in enumerate(tweets))
+    tweets_block = "\n\n".join(
+        f"[{i + 1}]\n{_build_tweet_prompt_text(t)}" for i, t in enumerate(tweets)
+    )
     prompt = BATCH_PROMPT_TEMPLATE.format(n=len(tweets), tweets=tweets_block)
 
     for attempt in range(3):
@@ -507,6 +591,10 @@ def main() -> None:
                 created_at=tweet["created_at"],
                 title=translated["title"],
                 summary=translated["summary"],
+                context_text=tweet.get("context_text", ""),
+                context_author=tweet.get("context_author", ""),
+                context_url=tweet.get("context_url", ""),
+                is_repost=tweet.get("is_repost", False),
             ))
             new_ids.add(tweet["id"])
 

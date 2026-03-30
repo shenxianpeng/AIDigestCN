@@ -16,7 +16,7 @@ pytest 测试 — pipeline.py 核心函数
   test_fetch_tweets_user_not_found    — 用户不存在时返回 []
   test_fetch_tweets_no_tweets         — 无推文时返回 []
   test_fetch_tweets_exception         — 任何异常返回 []（不抛出）
-  test_fetch_tweets_skip_retweets     — 过滤转推
+  test_fetch_tweets_includes_retweets_with_context — 转推包含上下文
   test_fetch_tweets_skip_replies      — 过滤回复
   test_translate_success              — 正常翻译返回 title/summary/original
   test_translate_api_failure          — API 异常时返回 fallback dict
@@ -384,8 +384,8 @@ def test_fetch_tweets_exception():
     assert result == []
 
 
-def test_fetch_tweets_skip_retweets():
-    """以 'RT @' 开头的推文应被过滤。"""
+def test_fetch_tweets_includes_retweets_with_context():
+    """以 'RT @' 开头的推文应被包含，并提取 context_author 和 context_text。"""
     mock_client = MagicMock()
     mock_tweet = _make_tweet_item("111", "RT @someone: some text")
 
@@ -393,7 +393,11 @@ def test_fetch_tweets_skip_retweets():
         mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
         result = fetch_tweets("sama", mock_client)
 
-    assert result == []
+    assert len(result) == 1
+    assert result[0]["text"] == "some text"
+    assert result[0]["context_author"] == "someone"
+    assert result[0]["context_text"] == "some text"
+    assert result[0]["is_repost"] is True
 
 
 def test_fetch_tweets_skip_replies():
@@ -408,8 +412,8 @@ def test_fetch_tweets_skip_replies():
     assert result == []
 
 
-def test_fetch_tweets_full_text_is_list():
-    """tweeterpy 返回 full_text 为列表时，应取第一个元素正常处理。"""
+def test_fetch_tweets_full_text_is_list_captures_context():
+    """tweeterpy 返回 full_text 为列表时，第二个元素应被捕获为引用上下文。"""
     mock_client = MagicMock()
     mock_tweet = _make_tweet_item("111", ["AGI is near", "quoted tweet text"])
 
@@ -419,10 +423,12 @@ def test_fetch_tweets_full_text_is_list():
 
     assert len(result) == 1
     assert result[0]["text"] == "AGI is near"
+    assert result[0]["context_text"] == "quoted tweet text"
+    assert result[0]["is_repost"] is False
 
 
 def test_fetch_tweets_full_text_list_is_retweet():
-    """full_text 为列表且第一个元素是转推时，应被过滤。"""
+    """full_text 为列表且第一个元素是转推时，应提取原始内容并标记为转推。"""
     mock_client = MagicMock()
     mock_tweet = _make_tweet_item("111", ["RT @someone: original", "original"])
 
@@ -430,7 +436,9 @@ def test_fetch_tweets_full_text_list_is_retweet():
         mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
         result = fetch_tweets("sama", mock_client)
 
-    assert result == []
+    assert len(result) == 1
+    assert result[0]["is_repost"] is True
+    assert result[0]["context_author"] == "someone"
 
 
 def test_fetch_tweets_in_reply_to_is_list():
