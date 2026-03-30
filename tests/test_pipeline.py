@@ -205,6 +205,28 @@ def test_parse_llm_output_extra_prefix():
     assert result["summary"] == "核心摘要内容。"
 
 
+def test_parse_llm_output_with_context():
+    """含 CONTEXT: 字段时正确提取引用内容的中文翻译。"""
+    text = textwrap.dedent("""\
+        TITLE: 关于大胆程度的理论
+        SUMMARY: Swyx 转发了关于大胆程度的思考。
+        CONTEXT: 生活会在你大胆的程度上与你相遇。
+    """)
+    result = parse_llm_output(text, original="original")
+
+    assert result["title"] == "关于大胆程度的理论"
+    assert result["summary"] == "Swyx 转发了关于大胆程度的思考。"
+    assert result["context_translated"] == "生活会在你大胆的程度上与你相遇。"
+
+
+def test_parse_llm_output_empty_context():
+    """CONTEXT: 为空时 context_translated 为空字符串。"""
+    text = "TITLE: 标题\nSUMMARY: 摘要。\nCONTEXT:"
+    result = parse_llm_output(text, original="original")
+
+    assert result["context_translated"] == ""
+
+
 # ---------------------------------------------------------------------------
 # render_html
 # ---------------------------------------------------------------------------
