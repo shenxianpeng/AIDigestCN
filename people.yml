@@ -1,6 +1,7 @@
 people:
   - id: sam_altman
     name: Sam Altman
+    role: OpenAI CEO
     twitter_handle: sama
     sources:
       - type: twitter
@@ -10,6 +11,7 @@ people:
 
   - id: dario_amodei
     name: Dario Amodei
+    role: Anthropic CEO
     twitter_handle: DarioAmodei
     sources:
       - type: twitter
@@ -17,6 +19,7 @@ people:
 
   - id: andrej_karpathy
     name: Andrej Karpathy
+    role: AI 研究者 / 前 Tesla AI 总监
     twitter_handle: karpathy
     sources:
       - type: twitter
@@ -24,6 +27,7 @@ people:
 
   - id: swyx
     name: Swyx
+    role: Latent Space 联合创始人
     twitter_handle: swyx
     sources:
       - type: twitter
@@ -31,6 +35,7 @@ people:
 
   - id: josh_woodward
     name: Josh Woodward
+    role: Google Labs VP
     twitter_handle: joshwoodward
     sources:
       - type: twitter
@@ -38,6 +43,7 @@ people:
 
   - id: kevin_weil
     name: Kevin Weil
+    role: OpenAI CPO
     twitter_handle: kevinweil
     sources:
       - type: twitter
@@ -45,6 +51,7 @@ people:
 
   - id: peter_yang
     name: Peter Yang
+    role: Cursor 产品负责人
     twitter_handle: petergyang
     sources:
       - type: twitter
@@ -52,6 +59,7 @@ people:
 
   - id: amanda_askell
     name: Amanda Askell
+    role: Anthropic 研究科学家
     twitter_handle: AmandaAskell
     sources:
       - type: twitter
@@ -59,6 +67,7 @@ people:
 
   - id: cat_wu
     name: Cat Wu
+    role: Anthropic 工程师
     twitter_handle: _catwu
     sources:
       - type: twitter
@@ -66,6 +75,7 @@ people:
 
   - id: amjad_masad
     name: Amjad Masad
+    role: Replit CEO
     twitter_handle: amasad
     sources:
       - type: twitter
@@ -73,6 +83,7 @@ people:
 
   - id: guillermo_rauch
     name: Guillermo Rauch
+    role: Vercel CEO
     twitter_handle: rauchg
     sources:
       - type: twitter
@@ -80,6 +91,7 @@ people:
 
   - id: alex_albert
     name: Alex Albert
+    role: Anthropic 开发者关系负责人
     twitter_handle: alexalbert__
     sources:
       - type: twitter
@@ -87,6 +99,7 @@ people:
 
   - id: aaron_levie
     name: Aaron Levie
+    role: Box CEO
     twitter_handle: levie
     sources:
       - type: twitter
@@ -94,6 +107,7 @@ people:
 
   - id: garry_tan
     name: Garry Tan
+    role: Y Combinator CEO
     twitter_handle: garrytan
     sources:
       - type: twitter
@@ -101,6 +115,7 @@ people:
 
   - id: matt_turck
     name: Matt Turck
+    role: FirstMark Capital 合伙人
     twitter_handle: mattturck
     sources:
       - type: twitter
@@ -108,6 +123,7 @@ people:
 
   - id: nikunj_kothari
     name: Nikunj Kothari
+    role: a16z 合伙人
     twitter_handle: nikunj
     sources:
       - type: twitter
@@ -115,6 +131,7 @@ people:
 
   - id: peter_steinberger
     name: Peter Steinberger
+    role: PSPDFKit 创始人
     twitter_handle: steipete
     sources:
       - type: twitter
@@ -122,6 +139,7 @@ people:
 
   - id: dan_shipper
     name: Dan Shipper
+    role: Every 联合创始人 & CEO
     twitter_handle: danshipper
     sources:
       - type: twitter
@@ -129,6 +147,7 @@ people:
 
   - id: aditya_agarwal
     name: Aditya Agarwal
+    role: Dropbox 前 CTO
     twitter_handle: adityaag
     sources:
       - type: twitter

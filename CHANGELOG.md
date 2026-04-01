@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0.0] - 2026-04-01
+
+### Added
+- README 全面重写：双语介绍、徽章、逐步配置向导（5 分钟上线）、关注人物列表（含角色）、环境变量参考、项目结构说明、常见问题 FAQ、贡献指南
+- `people.yml` 每人新增 `role` 字段（角色/职位），并在卡片 identity 区域展示
+- 人物姓名现链接到 Twitter 个人主页，鼠标悬停变为强调色
+- HTML 模板新增 OpenGraph 和 Twitter Card meta 标签，分享时自动生成预览
+
+### Changed
+- `pipeline.py`：`Person` dataclass 新增 `role` 字段；`TweetEntry` dataclass 新增 `person_role` 字段并在渲染时传入
+- 卡片 identity 区域：姓名行下方增加角色行（`author-role`），时间戳显示调整
+
 ## [0.2.1.0] - 2026-03-26
 
 ### Changed

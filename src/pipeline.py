@@ -138,6 +138,7 @@ class Person:
     name: str
     twitter_handle: str
     twitter_enabled: bool
+    role: str = ""                # 角色/职位（可选，显示在卡片上）
 
 
 @dataclass
@@ -151,6 +152,7 @@ class TweetEntry:
     title: str = ""
     summary: str = ""
     twitter_handle: str = ""      # Twitter @handle（用于头像路径）
+    person_role: str = ""         # 角色/职位（来自 people.yml 的 role 字段）
     context_text: str = ""        # 被引用/转发推文的内容（英文原文）
     context_author: str = ""      # 被引用/转发推文的作者 handle
     context_url: str = ""         # 被引用推文的链接
@@ -178,6 +180,7 @@ def load_config(path: Path = PEOPLE_FILE) -> list[Person]:
             name=item["name"],
             twitter_handle=item["twitter_handle"],
             twitter_enabled=twitter_enabled,
+            role=item.get("role", ""),
         ))
     return people
 
@@ -596,6 +599,7 @@ def main() -> None:
                 person_id=person.id,
                 person_name=person.name,
                 twitter_handle=person.twitter_handle,
+                person_role=person.role,
                 original_text=tweet["text"],
                 tweet_url=tweet["url"],
                 created_at=tweet["created_at"],

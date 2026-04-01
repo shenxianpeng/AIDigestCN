@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 领袖动态 · {{ date }}</title>
+  <meta name="description" content="每日自动抓取顶级 AI 领袖的推文，翻译成中文。{{ date }}">
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI 领袖动态 · {{ date }}">
+  <meta property="og:description" content="每日自动抓取顶级 AI 领袖的推文，翻译成中文。{{ date }}{% if entries %} · {{ entries|length }} 条{% endif %}">
+  <meta property="og:url" content="https://shenxianpeng.github.io/AIDigestCN/">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="AI 领袖动态 · {{ date }}">
+  <meta name="twitter:description" content="每日自动抓取顶级 AI 领袖的推文，翻译成中文。{{ date }}{% if entries %} · {{ entries|length }} 条{% endif %}">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2315803D'/><text x='16' y='22' text-anchor='middle' font-family='sans-serif' font-size='15' font-weight='700' fill='white'>AI</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -166,6 +176,14 @@
       color: var(--text);
       line-height: 1.3;
       letter-spacing: -.01em;
+      text-decoration: none;
+    }
+    .author-name:hover { color: var(--accent); }
+    .author-role {
+      font-size: 12px;
+      color: var(--text-2);
+      margin-top: 1px;
+      line-height: 1.3;
     }
     .author-meta {
       font-family: 'Geist Mono', 'JetBrains Mono', monospace;
@@ -364,7 +382,14 @@
         <div class="avatar">{{ entry.person_name[0] }}</div>
         {% endif %}
         <div class="identity-info">
-          <div class="author-name">{{ entry.person_name }}</div>
+          {% if entry.twitter_handle %}
+          <a class="author-name" href="https://twitter.com/{{ entry.twitter_handle }}" target="_blank" rel="noopener">{{ entry.person_name }}</a>
+          {% else %}
+          <span class="author-name">{{ entry.person_name }}</span>
+          {% endif %}
+          {% if entry.person_role %}
+          <div class="author-role">{{ entry.person_role }}</div>
+          {% endif %}
           <div class="author-meta">{{ entry.created_at }}</div>
         </div>
       </div>
