@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 领袖动态 · 历史存档</title>
+  <meta name="description" content="AI 领袖动态历史存档 — 每日自动抓取顶级 AI 领袖的推文并翻译成中文。">
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI 领袖动态 · 历史存档">
+  <meta property="og:description" content="AI 领袖动态历史存档 — 每日自动抓取顶级 AI 领袖的推文并翻译成中文。">
+  <meta property="og:url" content="https://shenxianpeng.github.io/AIDigestCN/archive/">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="AI 领袖动态 · 历史存档">
+  <meta name="twitter:description" content="AI 领袖动态历史存档 — 每日自动抓取顶级 AI 领袖的推文并翻译成中文。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2315803D'/><text x='16' y='22' text-anchor='middle' font-family='sans-serif' font-size='15' font-weight='700' fill='white'>AI</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.fontshare.com">
@@ -193,6 +204,7 @@
       transition: color .15s;
     }
     footer a:hover { color: var(--accent); }
+    .footer-sep { opacity: .4; }
 
     @media (max-width: 640px) {
       .container { padding: 28px 16px 60px; }
@@ -206,13 +218,20 @@
   <header>
     <div class="header-text">
       <h1>历史存档</h1>
-      <p class="subtitle">共 11 期 · <a href="../">返回首页</a></p>
+      <p class="subtitle">共 12 期 · <a href="../">返回首页</a></p>
     </div>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙 深色</button>
   </header>
 
   
     <ul class="archive-list">
+      
+      <li>
+        <a href="2026-04-02.html">
+          <span>2026-04-02</span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
       
       <li>
         <a href="2026-04-01.html">
@@ -296,6 +315,8 @@
 
   <footer>
     <a href="../">AI 领袖动态</a>
+    <span class="footer-sep">·</span>
+    <a href="https://github.com/shenxianpeng/AIDigestCN" target="_blank" rel="noopener">GitHub ↗</a>
   </footer>
 
 </div>
