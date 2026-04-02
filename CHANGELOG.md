@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0.0] - 2026-04-02
+
+### Added
+- `CONTRIBUTING.md`：详细的中文贡献指南，降低新贡献者门槛
+- GitHub Issue 模板（中文）：Bug 报告、功能请求、新增 AI 人物三类模板
+- GitHub Pull Request 模板（中文）
+- `SECURITY.md`：安全漏洞报告政策
+- README 新增"为什么选择 AIDigestCN"对比表、Forks 徽章、PRs Welcome 徽章、Star History 图表
+
+### Changed
+- README 贡献章节增加类型说明和模板链接
+
 ## [0.3.0.0] - 2026-04-01
 
 ### Added
