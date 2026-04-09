@@ -64,6 +64,10 @@ LOOKBACK_DAYS = 7
 # original tweets when a user's latest posts are mostly replies/retweets.
 FETCH_TWEETS_PER_USER = int(os.environ.get("TWEETS_PER_USER", "40"))
 
+# 开关：是否跳过纯转推（即转发他人推文但未添加任何评论的帖子）。
+# 设为 "true"（默认）时，纯 RT 不会被翻译和展示；设为 "false" 时保留所有转推。
+SKIP_PURE_REPOSTS = os.environ.get("SKIP_PURE_REPOSTS", "true").lower() == "true"
+
 # OpenAI 配置
 # gpt-4o-mini 具有较高的速率限制配额，适合批量翻译场景
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
@@ -241,7 +245,7 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
 
         raw_count = len(response["data"])
         results = []
-        skipped_no_text = skipped_no_id = skipped_rt = skipped_reply = 0
+        skipped_no_text = skipped_no_id = skipped_rt = skipped_reply = skipped_pure_repost = 0
         repost_count = 0
         for item in response["data"]:
             tweet = Tweet(item)
@@ -279,6 +283,10 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
                     full_text = context_text  # 用原始内容替换 RT @ 前缀
                     is_repost = True
                     repost_count += 1
+                    # 若开关开启，纯转推（无评论）直接跳过，不翻译
+                    if SKIP_PURE_REPOSTS:
+                        skipped_pure_repost += 1
+                        continue
                 else:
                     skipped_rt += 1
                     continue
@@ -331,7 +339,8 @@ def fetch_tweets(handle: str, client: TweeterPy) -> list[dict]:
 
         logger.info(
             f"  @{handle}: 原始={raw_count}, 无文本={skipped_no_text}, 无ID={skipped_no_id}, "
-            f"转推(含上下文)={repost_count}, 转推(无法解析)={skipped_rt}, 回复={skipped_reply}, 有效={len(results)}"
+            f"转推(含上下文)={repost_count}, 转推(无法解析)={skipped_rt}, "
+            f"纯转推(已跳过)={skipped_pure_repost}, 回复={skipped_reply}, 有效={len(results)}"
         )
         return results
     except Exception as e:

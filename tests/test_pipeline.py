@@ -407,11 +407,12 @@ def test_fetch_tweets_exception():
 
 
 def test_fetch_tweets_includes_retweets_with_context():
-    """以 'RT @' 开头的推文应被包含，并提取 context_author 和 context_text。"""
+    """SKIP_PURE_REPOSTS=False 时转推应被包含，并提取 context_author 和 context_text。"""
     mock_client = MagicMock()
     mock_tweet = _make_tweet_item("111", "RT @someone: some text")
 
-    with patch("pipeline.Tweet", return_value=mock_tweet):
+    with patch("pipeline.Tweet", return_value=mock_tweet), \
+         patch("pipeline.SKIP_PURE_REPOSTS", False):
         mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
         result = fetch_tweets("sama", mock_client)
 
@@ -420,6 +421,34 @@ def test_fetch_tweets_includes_retweets_with_context():
     assert result[0]["context_author"] == "someone"
     assert result[0]["context_text"] == "some text"
     assert result[0]["is_repost"] is True
+
+
+def test_fetch_tweets_skip_pure_reposts_enabled():
+    """SKIP_PURE_REPOSTS=True（默认）时纯转推应被过滤，不返回结果。"""
+    mock_client = MagicMock()
+    mock_tweet = _make_tweet_item("111", "RT @someone: some text")
+
+    with patch("pipeline.Tweet", return_value=mock_tweet), \
+         patch("pipeline.SKIP_PURE_REPOSTS", True):
+        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
+        result = fetch_tweets("sama", mock_client)
+
+    assert result == []
+
+
+def test_fetch_tweets_skip_pure_reposts_disabled_keeps_repost():
+    """SKIP_PURE_REPOSTS=False 时纯转推应被保留并标记 is_repost=True。"""
+    mock_client = MagicMock()
+    mock_tweet = _make_tweet_item("222", "RT @openai: Big news today")
+
+    with patch("pipeline.Tweet", return_value=mock_tweet), \
+         patch("pipeline.SKIP_PURE_REPOSTS", False):
+        mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
+        result = fetch_tweets("sama", mock_client)
+
+    assert len(result) == 1
+    assert result[0]["is_repost"] is True
+    assert result[0]["context_author"] == "openai"
 
 
 def test_fetch_tweets_skip_replies():
@@ -450,11 +479,12 @@ def test_fetch_tweets_full_text_is_list_captures_context():
 
 
 def test_fetch_tweets_full_text_list_is_retweet():
-    """full_text 为列表且第一个元素是转推时，应提取原始内容并标记为转推。"""
+    """full_text 为列表且第一个元素是转推时，SKIP_PURE_REPOSTS=False 时应提取原始内容并标记为转推。"""
     mock_client = MagicMock()
     mock_tweet = _make_tweet_item("111", ["RT @someone: original", "original"])
 
-    with patch("pipeline.Tweet", return_value=mock_tweet):
+    with patch("pipeline.Tweet", return_value=mock_tweet), \
+         patch("pipeline.SKIP_PURE_REPOSTS", False):
         mock_client.get_user_tweets.return_value = {"data": [MagicMock()]}
         result = fetch_tweets("sama", mock_client)
 
