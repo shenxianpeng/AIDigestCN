@@ -1,5 +1,8 @@
 # AI 领袖动态 · AIDigestCN
 
+> [!NOTE]
+> 本项目创建的初衷是为 Twitter（X）提供翻译能力。随着 Twitter（X）官方自动翻译功能的推出，这一需求已得到满足。因此，本项目正式归档。
+
 > 每日自动抓取顶级 AI 领袖的推文，翻译成中文，发布到 GitHub Pages。
 >
 > *Daily digest of top AI leaders' tweets — automatically translated to Chinese.*
